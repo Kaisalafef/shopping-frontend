@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+        <title>إدارة المنتجات | إضافة منتج جديد</title>
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+        <link
+            href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap"
+            rel="stylesheet">
+       <link rel="stylesheet" href="/Wedgit/style_footer.css">
+            <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="/Wedgit/style_header.css">
+    </head>
+
+    <body>
+
+        <header class="main-header">
+            <div class="header-container">
+                <div class="profile-menu">
+                    <button class="icon-btn" id="profileBtn" type="button"
+                        title="فتح القائمة">
+                        <i class="fas fa-user"></i>
+                    </button>
+
+                    <ul class="dropdown" id="desktopDropdown">
+    <li><a href="/Profile/Profile.html"><i class="fas fa-user-circle"></i> حسابي</a></li>
+    
+    <li class="admin-only" style="display: none;"><a href="/ADS/Add_ADS.html"><i class="fas fa-bullhorn"></i> إضافة إعلانات</a></li>
+    <li class="admin-only" style="display: none;"><a href="/Discount/Add_Discount.html"><i class="fas fa-tags"></i> إضافة خصومات</a></li>
+    <li class="admin-only" style="display: none;"><a href="/Add Proudct/add_Proudct.html"><i class="fas fa-add"></i> إضافة منتجات</a></li>
+    <li class="admin-only" style="display: none;"><a href="/Orders/Orders.html"><i class="fas fa-book"></i> سجل الطلبات</a></li>
+
+    <li id="cart-link"><a href="/Cart/Cart.html"><i class="fas fa-shopping-cart"></i> سلتي</a></li>
+    
+    <li><a href="/Wedgit/About.html"><i class="fas fa-info-circle"></i> حول</a></li>
+    <li class="divider"></li>
+    <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> تسجيل خروج</a></li>
+</ul>
+                </div>
+                <div class="search-box">
+                    <input type="text" id="globalSearchInput"
+                        placeholder="ابحث عن منتجات..." autocomplete="off">
+
+                    <button class="search-btn" type="submit" title="بحث">
+                        <i class="fas fa-search"></i>
+                    </button>
+
+                    <div id="searchResults"
+                        class="search-results-dropdown"></div>
+                </div>
+
+                <a href="#" class="logo-link">
+                    <img src="/images/logo.webp" class="logo" alt="Logo">
+                </a>
+               
+            </div>
+
+        </header>
+
+      
+       <div id="toast-box"></div>
+
+
+        <main class="container">
+            <header class="page-header">
+                <div class="header-content">
+                    <h1>إضافة منتج جديد</h1>
+                    <p class="subtitle">أدخل تفاصيل المنتج ليتم عرضها في
+                        المتجر.</p>
+                </div>
+                <input type="hidden" id="prodId">
+            </header>
+
+            <form id="productForm" class="main-grid" novalidate
+                onsubmit="return false;">
+
+                <section class="card form-section">
+                    <h2 class="card-title">البيانات الأساسية</h2>
+                    <div class="form-group">
+                        <label for="title" class="required">اسم المنتج</label>
+                        <input id="title" name="name" type="text"
+                            class="form-input" required
+                            placeholder="مثال: قميص قطني صيفي" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">وصف المنتج</label>
+                        <textarea id="description" name="description"
+                            class="form-textarea"
+                            placeholder="اكتب وصفاً دقيقاً للمنتج..."></textarea>
+                    </div>
+
+                    <div class="row-2-col">
+                        <div class="form-group">
+                            <label for="price" class="required">السعر</label>
+                            <input id="price" name="price" type="number"
+                                class="form-input" required min="1" step="0.01"
+                                placeholder="0.00" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="category" class="required">الفئة</label>
+                            <select id="category" name="category"
+                                class="form-select" required>
+                                <option value disabled selected>اختر
+                                    الفئة...</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="brand">العلامة التجارية (Brand)</label>
+                        <input id="brand" name="brand" type="text"
+                            class="form-input" placeholder="مثال: Nike, Zara" />
+                    </div>
+                </section>
+
+                <footer class="form-actions"
+                    style="grid-column: 1 / -1; display:flex; gap:1rem; margin-top:1rem;">
+                    <button type="button" id="saveBtn" class="btn btn-primary"
+                        style="flex:1">حفظ المنتج</button>
+                </footer>
+            </form>
+
+        </main>
+
+    <footer class="main-footer">
+        
+
+        <div class="footer-container">
+            <div class="footer-row">
+                
+                <div class="footer-col footer-about">
+                    <a href="#" class="footer-logo-link">
+                        <img src="/images/logoo.webp" alt="Logo" class="footer-logo">
+                    </a>
+                    <p class="footer-desc">
+                        متجرك الرقمي الأول لتسوق أحدث المنتجات بأفضل الأسعار. 
+                        نجمع بين الجودة، السرعة، والأمان لضمان تجربة تسوق لا تُنسى.
+                    </p>
+                </div>
+
+                <div class="footer-col footer-links">
+                    <h3>روابط هامة</h3>
+                    <ul id="footerLinksList">
+                        <li><a href="/Wedgit/About.html"><i class="fas fa-angle-left"></i> من نحن</a></li>
+                        
+                        <li class="client-link" style="display: none;"><a href="/Home/client_dashboard.html"><i class="fas fa-angle-left"></i> الرئيسية</a></li>
+                        <li class="client-link" style="display: none;"><a href="/Profile/Profile.html"><i class="fas fa-angle-left"></i> حسابي</a></li>
+                        <li class="client-link" style="display: none;"><a href="/Cart/Cart.html"><i class="fas fa-angle-left"></i> سلة المشتريات</a></li>
+
+                        <li class="admin-link" style="display: none;"><a href="/Home/admin_dashboard.html"><i class="fas fa-angle-left"></i> لوحة التحكم</a></li>
+                        <li class="admin-link" style="display: none;"><a href="/ADS/Add_ADS.html"><i class="fas fa-angle-left"></i> إدارة الإعلانات</a></li>
+                        <li class="admin-link" style="display: none;"><a href="/Add Proudct/add_Proudct.html"><i class="fas fa-angle-left"></i> إدارة المنتجات</a></li>
+                        <li class="admin-link" style="display: none;"><a href="/Discount/Add_Discount.html"><i class="fas fa-angle-left"></i> إدارة الخصومات</a></li>
+                                            <li class="admin-link" style="display: none;"><a href="/Orders/Orders.html"><i class="fas fa-angle-left"></i> سجل الطلبات </a></li>
+
+                    </ul>
+                </div>
+
+                <div class="footer-col footer-contact">
+                    <h3>تواصل معنا</h3>
+                    <div class="social-icons">
+                        <a href="#" class="social-btn facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-btn instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-btn whatsapp"><i class="fab fa-whatsapp"></i></a>
+                        <a href="#" class="social-btn twitter"><i class="fab fa-x-twitter"></i></a>
+                    </div>
+                    <div class="contact-info">
+                        <p><i class="fas fa-envelope"></i> support@store.com</p>
+                        <p><i class="fas fa-phone"></i> +963 999 999 999</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>جميع الحقوق محفوظة &copy; <span id="year"></span> لمتجرنا الإلكتروني.</p>
+        </div>
+    </footer>
+    <script src="/Auth/auth_guard.js"></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+        <script src="/Wedgit/script_header.js"></script>
+         <script src="/Wedgit/script_footer.js"></script>
+
+        <script src="script.js"></script>
+    </body>
+
+</html>

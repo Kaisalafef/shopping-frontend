@@ -1,0 +1,329 @@
+/* ==========================================================================
+   1. المتغيرات والتهيئة الأساسية (تطابق الهيدر والفوتر والسلة)
+   ========================================================================== */
+:root {
+    --primary-color: #1e272e;         /* لون الفوتر والهيدر الداكن */
+    --accent-gold: #f0c14b;           /* اللون الذهبي المعتمد */
+    --accent-gold-hover: #eebb38;     /* الذهبي عند التمرير */
+    --green-success: #27ae60;
+    --green-hover: #219150;
+    --red-danger: #e74c3c;
+    --bg-light: #f4f6f7;
+    --text-dark: #2d3436;
+    --text-grey: #636e72;
+    --border-radius: 12px;
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
+    --shadow-md: 0 8px 16px rgba(0,0,0,0.08);
+}
+
+body {
+    background-color: var(--bg-light);
+    font-family: 'Cairo', sans-serif;
+    margin: 0;
+    padding: 0;
+    color: var(--text-dark);
+    direction: rtl;
+}
+
+/* الحاوية الرئيسية للمنتج */
+.product-widget {
+    background: #ffffff;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-md);
+    max-width: 1000px;
+    margin: 40px auto 120px; /* مسافة سفلية 120 بكسل لمنع تداخل أمواج الفوتر */
+    width: 95%;
+    padding: 30px;
+    box-sizing: border-box;
+}
+
+/* ==========================================================================
+   2. تفاصيل المنتج (Product Details Layout)
+   ========================================================================== */
+.product-container {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+}
+
+.product-image-section {
+    flex: 1;
+    max-width: 450px;
+}
+
+.product-image-section img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid #e1e8ed;
+}
+
+.product-info-section {
+    flex: 1.2;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#pw-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin: 0;
+}
+
+/* الأسعار والتخفيضات */
+.price-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 5px;
+}
+
+#pw-price {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--green-success);
+}
+
+#pw-old-price {
+    font-size: 1.2rem;
+    color: var(--text-grey);
+    text-decoration: line-line-through;
+    text-decoration: line-through;
+    opacity: 0.7;
+}
+
+#pw-desc {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--text-grey);
+}
+
+/* التحكم بالكمية وأزرار الشراء */
+.purchase-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+.quantity-control {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    background: #fff;
+}
+
+.quantity-control button {
+    background: #f8f9fa;
+    border: none;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: background 0.2s;
+}
+
+.quantity-control button:hover {
+    background: #e9ecef;
+}
+
+.quantity-control input {
+    width: 50px;
+    text-align: center;
+    border: none;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+/* زر أضف إلى السلة بنفس ستايل السلة الرائع */
+.btn-add-cart {
+    background-color: var(--primary-color);
+    color: #ffffff;
+    border: none;
+    padding: 12px 28px;
+    border-radius: var(--border-radius);
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-add-cart:hover {
+    background-color: #2c3e50;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* ==========================================================================
+   3. نظام التقييمات والنجمات (إصلاح تفاعل الـ Hover)
+   ========================================================================== */
+.rating-section {
+    border-top: 1px solid #eee;
+    padding-top: 25px;
+    margin-top: 25px;
+}
+
+.rating-input {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 6px;
+    margin: 15px 0;
+}
+
+.rating-input .star {
+    font-size: 2.2rem;
+    color: #d1d5db;
+    cursor: pointer;
+    transition: color 0.2s ease, transform 0.1s ease;
+}
+
+.rating-input .star:hover {
+    transform: scale(1.1);
+}
+
+/* إضاءة النجمة المؤشر عليها وكل النجمات السابقة لها بالتوالي */
+.rating-input .star:hover,
+.rating-input .star:hover ~ .star,
+.rating-input .star.selected,
+.rating-input .star.selected ~ .star {
+    color: var(--accent-gold) !important;
+}
+
+/* قائمة التقييمات السابقة */
+.reviews-container {
+    margin-top: 30px;
+}
+
+.review-card {
+    background: #f8f9fa;
+    border-radius: var(--border-radius);
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    border-right: 4px solid var(--accent-gold);
+}
+
+/* ==========================================================================
+   4. النوافذ المنبثقة (Modals) والإشعارات (Toasts) بنفس ستايل الـ Cart
+   ========================================================================== */
+#toast-box {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 9999;
+    max-width: 350px;
+    width: calc(100% - 40px);
+}
+
+.toast {
+    background: #fff;
+    color: #333;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    position: relative;
+    overflow: hidden;
+    transform: translateX(120%);
+    animation: slideIn 0.4s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.toast.success { border-right: 6px solid var(--green-success); }
+.toast.success i { color: var(--green-success); }
+
+.toast.error { border-right: 6px solid var(--red-danger); }
+.toast.error i { color: var(--red-danger); }
+
+.toast.warning { border-right: 6px solid var(--accent-gold); }
+.toast.warning i { color: var(--accent-gold); }
+
+.toast::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 3px;
+    background: rgba(0,0,0,0.05);
+    animation: timeOut 4s linear forwards;
+}
+
+.toast.hide {
+    animation: slideOut 0.4s forwards ease-in;
+}
+
+@keyframes slideIn { to { transform: translateX(0); } }
+@keyframes slideOut { to { transform: translateX(120%); opacity: 0; } }
+@keyframes timeOut { to { width: 0; } }
+
+/* ==========================================================================
+   5. التجاوب مع الهواتف المحمولة (Responsive Design)
+   ========================================================================== */
+@media (max-width: 768px) {
+    .product-widget {
+        padding: 15px;
+        margin-top: 20px;
+    }
+
+    .product-container {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .product-image-section {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    #pw-title {
+        font-size: 1.4rem;
+        text-align: center;
+    }
+
+    .price-container {
+        justify-content: center;
+    }
+
+    .purchase-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .quantity-control, .btn-add-cart {
+        width: 100%;
+        justify-content: center;
+    }
+
+    #toast-box {
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+        bottom: 20px;
+    }
+
+    @keyframes slideIn {
+        from { transform: translate(-50%, 20px); opacity: 0; }
+        to { transform: translate(-50%, 0); opacity: 1; }
+    }
+    @keyframes slideOut {
+        to { transform: translate(-50%, 20px); opacity: 0; }
+    }
+}

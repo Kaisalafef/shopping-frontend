@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صفحة الدفع</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="pay.css">
+</head>
+<body>
+
+<div class="payment-container">
+    <h1>اختر طريقة الدفع</h1>
+    <p class="payment-subtitle">حدد الطريقة الأنسب لإتمام عملية الدفع بأمان</p>
+
+    <div class="payment-options">
+        <label class="option">
+            <input type="radio" name="payment" value="cash">
+            <i class="fa-solid fa-money-bill-wave"></i>
+            <span>الدفع كاش عند الاستلام</span>
+        </label>
+
+        <label class="option">
+            <input type="radio" name="payment" value="shamcash">
+            <i class="fa-solid fa-wallet"></i>
+            <span>الدفع عبر شام كاش</span>
+        </label>
+
+        <label class="option">
+            <input type="radio" name="payment" value="usdt">
+            <i class="fa-solid fa-coins"></i>
+            <span>الدفع عبر USDT</span>
+        </label>
+    </div>
+
+    <button id="submitOrder" class="hidden">إرسال الطلب</button>
+</div>
+
+<!-- Popup QR -->
+<div id="qrModal" class="modal">
+    <div class="modal-content">
+        <span id="closeModal">&times;</span>
+        <h2>قم بمسح رمز QR لإتمام الدفع</h2>
+        <img id="qrImage" src="" alt="QR Code">
+        <br>
+         <button id="donePayment">تم الدفع</button>
+    </div>
+</div>
+
+<script src="pay.js"></script>
+</body>
+</html>
