@@ -1,4 +1,3 @@
-
 const API_URL = "https://api.tasswek.com/api";
 const token = localStorage.getItem("token");
 
@@ -13,6 +12,31 @@ const headers = {
 };
 
 let CURRENT_CART_ID = null;
+
+// ===== Exchange Rate (SYP -> USD) =====
+// Assumes GET /api/exchange-rate returns { rate: <SYP per 1 USD> }
+// Adjust the endpoint/response shape to match your backend if different.
+let EXCHANGE_RATE = null;
+let CURRENT_TOTAL_SYP = 0;
+
+async function fetchExchangeRate() {
+    try {
+        const res = await fetch(`${API_URL}/exchange-rate`);
+        if (!res.ok) throw new Error("bad response");
+        const json = await res.json();
+        const rate = Number(json.rate);
+        EXCHANGE_RATE = rate > 0 ? rate : null;
+    } catch (error) {
+        console.error("فشل جلب سعر الصرف", error);
+        EXCHANGE_RATE = null;
+    }
+    return EXCHANGE_RATE;
+}
+
+function sypToUsd(sypAmount) {
+    if (!EXCHANGE_RATE) return null;
+    return sypAmount / EXCHANGE_RATE;
+}
 
   
   
@@ -168,7 +192,12 @@ async function removeItem(itemId) {
 
 
 function updateTotal(total) {
-    document.getElementById("cartTotal").innerText = `${total} SYP`;
+    CURRENT_TOTAL_SYP = Number(total) || 0;
+
+    const usd = sypToUsd(CURRENT_TOTAL_SYP);
+    const usdLabel = usd !== null ? ` (~$${usd.toFixed(2)})` : "";
+
+    document.getElementById("cartTotal").innerText = `${total} SYP${usdLabel}`;
 }
 
 
@@ -210,6 +239,12 @@ async function submitOrder(event) {
     // نخزن العنوان مؤقتاً
     localStorage.setItem("checkout_address", address);
 
+    // نخزن الإجمالي وسعر الصرف المستخدم وقت الطلب لعرضهما في صفحة الدفع
+    const usdTotal = sypToUsd(CURRENT_TOTAL_SYP);
+    localStorage.setItem("checkout_total_syp", CURRENT_TOTAL_SYP);
+    localStorage.setItem("checkout_exchange_rate", EXCHANGE_RATE ?? "");
+    localStorage.setItem("checkout_total_usd", usdTotal !== null ? usdTotal.toFixed(2) : "");
+
     // نغلق المودال
     closeCheckoutModal();
 
@@ -217,6 +252,7 @@ async function submitOrder(event) {
     window.location.href = "/payments/pay.html";
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+    await fetchExchangeRate();
     getUserCart();
 });

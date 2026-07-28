@@ -153,6 +153,12 @@ body {
     font-size: 1.1rem;
 }
 
+.usd-price {
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
 .actions-bottom {
     display: flex;
     align-items: center;

@@ -8,11 +8,12 @@
         <title>إدارة المنتجات | إضافة منتج جديد</title>
         <link rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-        <link
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+            <link
             href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap"
             rel="stylesheet">
         <link rel="stylesheet" href="/Wedgit/style_footer.css">
-        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="add_style.css">
         <link rel="stylesheet" href="/Wedgit/style_header.css">
     </head>
 
@@ -119,11 +120,18 @@
 
                         <div class="form-group">
                             <label for="category" class="required">الفئة</label>
-                            <select id="category" name="category"
-                                class="form-select" required>
-                                <option value disabled selected>اختر
-                                    الفئة...</option>
-                            </select>
+                            <div class="select-with-action">
+                                <select id="category" name="category"
+                                    class="form-select" required>
+                                    <option value disabled selected>اختر
+                                        الفئة...</option>
+                                </select>
+                                <button type="button" id="addCategoryBtn"
+                                    class="btn-icon-add"
+                                    title="إضافة قسم جديد">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -146,8 +154,6 @@
                         </div>
                         <div id="colorsList" class="options-container"></div>
                     </div>
-                    <div id="colorsList" class="options-container"></div>
-                </div>
 
                     <!-- ===== SIZES ===== -->
                     <div class="card">
@@ -161,9 +167,7 @@
                         </div>
                         <div id="sizesList" class="options-container"></div>
                     </div>
-                    <div id="sizesList" class="options-container"></div>
-                </div>
-            </aside>
+                </aside>
 
                 <footer class="form-actions"
                     style="grid-column: 1 / -1; display:flex; gap:1rem; margin-top:1rem;">
@@ -173,6 +177,42 @@
             </form>
 
         </main>
+
+        <!-- ===== ADD CATEGORY MODAL ===== -->
+        <div id="categoryModalOverlay" class="modal-overlay hidden">
+            <div class="modal-box">
+                <div class="modal-header">
+                    <h3>إضافة قسم جديد</h3>
+                    <button type="button" id="closeCategoryModal"
+                        class="modal-close" aria-label="إغلاق">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="newCategoryName" class="required">اسم القسم</label>
+                        <input id="newCategoryName" type="text"
+                            class="form-input"
+                            placeholder="مثال: أزياء رجالية" />
+                    </div>
+                    
+                    <!-- واجهة اختيار الأيقونات -->
+                    <div class="form-group">
+                        <label class="required">أيقونة القسم (اختر أيقونة):</label>
+                        <input type="hidden" id="categoryIcon">
+                        <div class="icons-grid" id="iconGrid">
+                            <!-- سيتم حقن الأيقونات هنا بواسطة الجافاسكربت -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="cancelCategoryBtn"
+                        class="btn btn-secondary">إلغاء</button>
+                    <button type="button" id="saveCategoryBtn"
+                        class="btn btn-primary">حفظ القسم</button>
+                </div>
+            </div>
+        </div>
 
         <footer class="main-footer">
 
@@ -269,7 +309,7 @@
         <script src="/Wedgit/script_header.js"></script>
         <script src="/Wedgit/script_footer.js"></script>
 
-        <script src="script.js"></script>
+        <script src="add_script.js"></script>
     </body>
 
 </html>

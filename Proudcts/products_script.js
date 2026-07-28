@@ -29,6 +29,23 @@ function showToast(msg, type = "success") {
 
 let allProducts = [];
 
+// ===== Exchange Rate (SYP -> USD) =====
+let EXCHANGE_RATE = null;
+
+async function fetchExchangeRate() {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/exchange-rate`);
+    if (!res.ok) throw new Error("bad response");
+    const json = await res.json();
+    const rate = Number(json.rate);
+    EXCHANGE_RATE = rate > 0 ? rate : null;
+  } catch (e) {
+    console.error("فشل جلب سعر الصرف", e);
+    EXCHANGE_RATE = null;
+  }
+  return EXCHANGE_RATE;
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const urlParams = new URLSearchParams(window.location.search);
   const selectedCategory = urlParams.get("cat"); 
@@ -119,7 +136,10 @@ document.addEventListener("DOMContentLoaded", () => {
   if (searchBtn) searchBtn.addEventListener("click", (e) => { e.preventDefault(); handleSearch(); });
   if (searchInput) searchInput.addEventListener("keyup", (e) => { if (e.key === "Enter") handleSearch(); });
 
-  fetchProducts();
+  (async () => {
+    await fetchExchangeRate();
+    fetchProducts();
+  })();
 });
 
 function createProductCard(product, isAdmin) {
@@ -127,14 +147,19 @@ function createProductCard(product, isAdmin) {
   const finalPriceVal = product.finalPrice ?? product.price;
   const finalFormatted = new Intl.NumberFormat("en-US").format(finalPriceVal);
 
+  const usdHtml = EXCHANGE_RATE
+    ? `<span class="usd-price">(~$${(finalPriceVal / EXCHANGE_RATE).toFixed(2)})</span>`
+    : "";
+
   let priceHtml = product.discount > 0
     ? `
       <div class="price-container">
         <span class="new-price">${finalFormatted} SYP</span>
         <span class="old-price">${priceFormatted} SYP</span>
+        ${usdHtml}
       </div>
     `
-    : `<span class="regular-price">${priceFormatted} SYP</span>`;
+    : `<span class="regular-price">${priceFormatted} SYP</span> ${usdHtml}`;
 
   const discountBadge = product.discount > 0
     ? `<span class="discount-badge">-${product.discount}%</span>`

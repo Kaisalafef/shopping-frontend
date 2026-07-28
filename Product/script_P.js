@@ -1,5 +1,3 @@
-
-
 const API_BASE = "https://api.tasswek.com/api";
 
   
@@ -32,6 +30,28 @@ const API_BASE = "https://api.tasswek.com/api";
       });
     }, 4000);
   }
+
+// ===== Exchange Rate (SYP -> USD) =====
+let EXCHANGE_RATE = null;
+
+async function fetchExchangeRate() {
+  try {
+    const res = await fetch(`${API_BASE}/exchange-rate`);
+    if (!res.ok) throw new Error("bad response");
+    const json = await res.json();
+    const rate = Number(json.rate);
+    EXCHANGE_RATE = rate > 0 ? rate : null;
+  } catch (e) {
+    console.error("فشل جلب سعر الصرف", e);
+    EXCHANGE_RATE = null;
+  }
+  return EXCHANGE_RATE;
+}
+
+function usdLabel(sypAmount) {
+  if (!EXCHANGE_RATE) return "";
+  return `<span class="usd-price">(~$${(sypAmount / EXCHANGE_RATE).toFixed(2)})</span>`;
+}
 
 const params = new URLSearchParams(window.location.search);
 const productId = params.get("id");
@@ -119,9 +139,10 @@ function renderProduct(product) {
       <span class="old-price">${price} SYP</span>
       <span class="new-price">${finalPrice} SYP</span>
       <span class="discount-badge">-${discount}%</span>
+      ${usdLabel(finalPrice)}
     `;
   } else {
-    priceEl.innerHTML = `<span class="new-price">${price} SYP</span>`;
+    priceEl.innerHTML = `<span class="new-price">${price} SYP</span> ${usdLabel(price)}`;
   }
 
   
@@ -332,7 +353,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   
-  loadProduct();
+  fetchExchangeRate().then(() => loadProduct());
 
   
   loadReviews();
