@@ -71,7 +71,6 @@ async function getUserCart() {
     }
 }
 
-
 function renderCartItems(items) {
     const grid = document.querySelector(".products-grid");
     grid.innerHTML = "";
@@ -79,15 +78,21 @@ function renderCartItems(items) {
     if (!items || items.length === 0) {
         grid.innerHTML = `<div class="empty-cart">السلة فارغة، ابدأ التسوق الآن</div>`;
         document.getElementById("buyAllBtn").style.display = "none";
-        document.getElementById("cartTotal").innerText = "0 ";
+        document.getElementById("cartTotal").innerText = "0 SYP";
         return;
     }
 
     document.getElementById("buyAllBtn").style.display = "inline-flex";
 
     items.forEach(item => {
+        // التحقق من وجود الصورة أو استخدام صورة افتراضية في حال عدم وجودها
+        const imageUrl = item.product?.image_url || item.product?.image || '/images/logo.webp';
+
         grid.innerHTML += `
         <div class="product-card">
+            <div class="product-image-thumb">
+                <img src="${imageUrl}" alt="${item.product?.name ?? "منتج"}" onerror="this.src='/images/logo.webp'">
+            </div>
             <div class="product-details">
                 <div class="info-top">
                     <h3 class="product-name">${item.product?.name ?? "منتج بدون اسم"}</h3>
@@ -102,7 +107,7 @@ function renderCartItems(items) {
                     </div>
 
                     <button class="btn-remove" onclick="removeItem(${item.id})">
-                        <i class="fas fa-trash-alt"></i> حذف من السلة
+                        <i class="fas fa-trash-alt"></i> حذف
                     </button>
                 </div>
             </div>
@@ -110,7 +115,6 @@ function renderCartItems(items) {
         `;
     });
 }
-
 
 async function updateQuantity(itemId, quantity) {
     if (!CURRENT_CART_ID || quantity < 1) return;

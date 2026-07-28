@@ -1,18 +1,19 @@
   <!DOCTYPE html>
-  <html lang="ar" dir="rtl">
-    <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-      />
-      <link rel="stylesheet" href="/Wedgit/style_header.css" />
-      <link rel="stylesheet" href="style.css?v=1.2" />
-      <link rel="stylesheet" href="/Wedgit/style_footer.css">
-      <script src="/Wedgit/script_header.js"></script>
-      <title>Cart</title>
-    </head>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <!-- تعديل المسارات لتكون نسبية بدلاً من البدء بـ / -->
+    <link rel="stylesheet" href="../Wedgit/style_header.css" />
+    <link rel="stylesheet" href="Cart.css" />
+    <link rel="stylesheet" href="../Wedgit/style_footer.css" />
+    <script src="../Wedgit/script_header.js"></script>
+    <title>Cart</title>
+  </head>
     <body>
       <header class="main-header">
         <div class="header-container">
@@ -172,11 +173,9 @@
               </form>
           </div>
       </div>
-              <script src="/Auth/auth_guard.js"></script>
-      <script
-              src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="/Wedgit/script_footer.js"></script>
-
-              <script src="Cart.js?v=1.1"></script>
-    </body>
-  </html>
+       <script src="../Auth/auth_guard.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="../Wedgit/script_footer.js"></script>
+    <script src="Cart.js"></script>
+  </body>
+</html>

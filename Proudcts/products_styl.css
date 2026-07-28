@@ -1,6 +1,3 @@
-
-
-
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap');
 
 :root {
@@ -21,7 +18,7 @@ body {
     margin: 0;
 }
 
-
+/* ================= PRODUCTS GRID & CARDS ================= */
 .products-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -29,13 +26,12 @@ body {
     padding: 20px 0;
 }
 
-
 .product-card {
     background: var(--card-bg);
     border-radius: var(--border-radius);
     position: relative; 
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    border: 1px solid rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.06);
     box-shadow: var(--shadow-sm);
     display: flex;
     flex-direction: column;
@@ -49,7 +45,6 @@ body {
     border-color: rgba(0,0,0,0.1);
 }
 
-
 .card-link-wrapper {
     text-decoration: none;
     color: inherit;
@@ -57,7 +52,6 @@ body {
     flex-direction: column;
     height: 100%;
 }
-
 
 .product-img-wrapper {
     width: 100%;
@@ -83,7 +77,6 @@ body {
     transform: scale(1.08);
 }
 
-
 .discount-badge {
     position: absolute;
     top: 12px;
@@ -97,7 +90,6 @@ body {
     box-shadow: 0 2px 5px rgba(231, 76, 60, 0.4);
     z-index: 10;
 }
-
 
 .product-info {
     padding: 20px;
@@ -113,14 +105,12 @@ body {
     color: var(--text-dark);
     margin-bottom: 10px;
     line-height: 1.5;
-    
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     height: 3em; 
 }
-
 
 .product-price {
     margin-top: auto;
@@ -129,13 +119,11 @@ body {
     gap: 2px;
 }
 
-
 .regular-price {
     font-size: 1.2rem;
     font-weight: 800;
     color: var(--primary-color);
 }
-
 
 .price-container {
     display: flex;
@@ -157,7 +145,6 @@ body {
     font-size: 1.3rem;
 }
 
-
 .no-results {
     grid-column: 1 / -1;
     text-align: center;
@@ -171,55 +158,114 @@ body {
     gap: 15px;
 }
 
+/* ================= ADMIN ACTIONS ================= */
+.admin-actions {
+    display: flex;
+    gap: 8px;
+    padding: 10px 12px 14px 12px;
+    background: #ffffff;
+    border-top: 1px solid #f1f5f9;
+    position: relative;
+    z-index: 10;
+}
 
+.admin-btn {
+    flex: 1;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 8px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+}
 
+.edit-btn {
+    background: #e0f2fe;
+    color: #0284c7;
+}
+
+.edit-btn:active, .edit-btn:hover {
+    background: #0284c7;
+    color: #ffffff;
+}
+
+.delete-btn {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.delete-btn:active, .delete-btn:hover {
+    background: #dc2626;
+    color: #ffffff;
+}
+
+a, button, .product-card, .admin-btn {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+/* ================= TOAST NOTIFICATIONS ================= */
 #toast-box {
     position: fixed;
-    top: 30px;
-    left: 30px; 
+    top: 20px;
+    left: 20px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
+    gap: 8px;
     z-index: 9999;
+    pointer-events: none;
+    width: auto;
+    max-width: 250px;
 }
-
 
 .toast {
-    width: 350px;
-    height: 70px;
-    background: #fff;
+    pointer-events: auto;
+    width: 100%;
+    min-height: 40px;
+    background: #ffffff;
+    font-size: 0.8rem;
     font-weight: 600;
-    margin: 10px 0;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.12);
     display: flex;
     align-items: center;
-    position: relative;
-    transform: translateX(-100%); 
-    animation: slideIn 0.5s forwards; 
-    border-radius: 8px;
+    padding: 6px 10px;
+    border-radius: 6px;
     overflow: hidden;
     font-family: 'Cairo', sans-serif;
+    box-sizing: border-box;
+    animation: toastSlideInLeft 0.3s ease-out forwards;
 }
-
 
 .toast i {
-    font-size: 24px;
-    margin: 0 15px;
+    font-size: 16px;
+    margin-right: 2px;
+    margin-left: 8px;
+    flex-shrink: 0;
 }
 
+.toast span {
+    flex-grow: 1;
+    line-height: 1.2;
+    color: var(--text-dark);
+    word-break: break-word;
+}
 
-.toast.success { border-right: 6px solid #2ecc71; }
+.toast.success { border-right: 4px solid #2ecc71; }
 .toast.success i { color: #2ecc71; }
 
-
-.toast.error { border-right: 6px solid #e74c3c; }
+.toast.error { border-right: 4px solid #e74c3c; }
 .toast.error i { color: #e74c3c; }
 
-
-.toast.warning { border-right: 6px solid #f1c40f; }
+.toast.warning { border-right: 4px solid #f1c40f; }
 .toast.warning i { color: #f1c40f; }
-
 
 .toast::after {
     content: '';
@@ -228,130 +274,133 @@ body {
     left: 0;
     width: 100%;
     height: 3px;
-    background: rgba(0,0,0,0.05);
-    animation: timeOut 4s linear forwards; 
+    background: rgba(0,0,0,0.06);
+    animation: timeOut 4s linear forwards;
 }
 
+@keyframes toastSlideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
 
-@keyframes slideIn {
-    100% { transform: translateX(0); }
+.toast.hide {
+    animation: toastSlideOutLeft 0.3s ease-in forwards;
+}
+
+@keyframes toastSlideOutLeft {
+    to {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
 }
 
 @keyframes timeOut {
     100% { width: 0; }
 }
 
-
-.toast.hide {
-    animation: slideOut 0.5s forwards;
-}
-
-@keyframes slideOut {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-200%); opacity: 0; }
-}
-
-
+/* ==========================================================================
+   التجاوب مع الموبايل (تصغير شامل لجميع النصوص والأزرار والعناصر)
+   ========================================================================== */
 @media (max-width: 600px) {
     .products-grid {
         grid-template-columns: repeat(2, 1fr); 
-        gap: 12px;
-        padding: 10px;
+        gap: 8px;
+        padding: 8px 4px;
     }
 
     .product-img-wrapper {
-        height: 150px;
-        padding: 10px;
-    }
-
-    .product-info {
-        padding: 12px;
-    }
-
-    .product-title {
-        font-size: 0.9rem;
-        height: 2.8em;
-    }
-
-    .new-price {
-        font-size: 1.1rem;
-    }
-    
-    .old-price {
-        font-size: 0.85rem;
-    }
-
-    .discount-badge {
-        font-size: 0.75rem;
-        padding: 3px 8px;
-        top: 8px;
-        right: 8px;
-    }
-}
-
-.admin-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
-}
-
-
-.admin-btn {
-    flex: 1;
-    border: none;
-    border-radius: 10px;
-    padding: 8px 10px;
-    font-family: 'Cairo', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 700;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    transition: all 0.25s ease;
-}
-
-
-.edit-btn {
-    background: rgba(52, 152, 219, 0.12);
-    color: #2980b9;
-}
-
-.edit-btn:hover {
-    background: #3498db;
-    color: #fff;
-    transform: translateY(-2px);
-}
-
-
-.delete-btn {
-    background: rgba(231, 76, 60, 0.12);
-    color: #c0392b;
-}
-
-.delete-btn:hover {
-    background: #e74c3c;
-    color: #fff;
-    transform: translateY(-2px);
-}
-
-
-.admin-btn i {
-    font-size: 0.9rem;
-}
-
-
-@media (max-width: 600px) {
-    .admin-btn span {
-        display: none; 
-    }
-
-    .admin-btn {
+        height: 130px;
         padding: 8px;
     }
 
+    .product-info {
+        padding: 8px;
+    }
+
+    /* تصغير عنوان المنتج */
+    .product-title {
+        font-size: 0.78rem;
+        line-height: 1.3;
+        height: 2.6em;
+        margin-bottom: 6px;
+    }
+
+    /* تصغير الأسعار */
+    .regular-price {
+        font-size: 0.85rem;
+    }
+
+    .new-price {
+        font-size: 0.88rem;
+    }
+    
+    .old-price {
+        font-size: 0.72rem;
+    }
+
+    .price-container {
+        gap: 4px;
+    }
+
+    /* تصغير شارة الخصم */
+    .discount-badge {
+        font-size: 0.65rem;
+        padding: 2px 6px;
+        top: 6px;
+        right: 6px;
+        border-radius: 12px;
+    }
+
+    /* تصغير أزرار الأدمن (تعديل وحذف) */
+    .admin-actions {
+        padding: 6px;
+        gap: 4px;
+    }
+
+    .admin-btn {
+        padding: 6px 4px;
+        font-size: 0.72rem;
+        border-radius: 6px;
+        gap: 3px;
+    }
+
     .admin-btn i {
-        font-size: 1rem;
+        font-size: 0.75rem;
+    }
+
+    .admin-btn span {
+        display: inline-block;
+    }
+
+    /* تصغير رسالة عدم وجود نتائج */
+    .no-results {
+        padding: 30px 15px;
+        font-size: 0.9rem;
+        gap: 10px;
+    }
+
+    /* تصغير صندوق التنبيهات */
+    #toast-box {
+        top: 12px;
+        left: 12px;
+        max-width: 180px;
+    }
+
+    .toast {
+        font-size: 0.7rem;
+        min-height: 32px;
+        padding: 4px 6px;
+        border-radius: 5px;
+    }
+
+    .toast i {
+        font-size: 13px;
+        margin-left: 4px;
     }
 }
