@@ -272,6 +272,7 @@ addBtn.addEventListener("click", () => {
     .then((item) => {
       console.log("تمت إضافة المنتج:", item);
       showToast("تمت إضافة المنتج إلى السلة بنجاح ✅", "success");
+      window.dispatchEvent(new CustomEvent("cart:updated"));
     })
     .catch((err) => {
       console.error(err);

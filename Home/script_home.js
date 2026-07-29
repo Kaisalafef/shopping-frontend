@@ -1,25 +1,3 @@
-async function removeDiscount(productId) {
-    const product = state.products.find((p) => p.id == productId);
-    if (!product?.discount) return;
-
-    try {
-      await fetch(API_URLS.DELETE_OFFER(product.discount.offerId), {
-        method: "DELETE",
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${getAuthToken()}`,
-        },
-      });
-
-      toast("تم حذف الخصم");
-      closeModal();
-      fetchProducts();
-    } catch {
-      toast("فشل حذف الخصم", "error");
-    }
-  }
-
-
 document.addEventListener("DOMContentLoaded", () => {
 
     const BASE_URL = "https://api.tasswek.com";
@@ -251,9 +229,8 @@ document.addEventListener("DOMContentLoaded", () => {
                             <h4 class="offer-title">${p.name}</h4>
 
                             <div class="offer-prices">
-                                <span class="new-price">SYP</span>
-                                <span class="new-price">${Math.round(finalPrice)}</span>
-                                <span class="old-price">${basePrice}</span>
+                                <span class="new-price">${Math.round(finalPrice)} SYP</span>
+                                <span class="old-price">${basePrice} SYP</span>
                                 ${EXCHANGE_RATE ? `<span class="usd-price">${toUsdLabel(finalPrice)}</span>` : ""}
                             </div>
                         </div>

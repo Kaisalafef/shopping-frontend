@@ -38,6 +38,12 @@ function sypToUsd(sypAmount) {
     return sypAmount / EXCHANGE_RATE;
 }
 
+// يعرض السعر المقابل بالدولار لعنصر واحد في السلة (يوحّد شكل العرض مع صفحة المنتج والصفحة الرئيسية)
+function usdItemLabel(sypAmount) {
+    const usd = sypToUsd(Number(sypAmount) || 0);
+    return usd !== null ? `<span class="usd-price">(~$${usd.toFixed(2)})</span>` : "";
+}
+
   
   
   
@@ -120,12 +126,12 @@ function renderCartItems(items) {
             <div class="product-details">
                 <div class="info-top">
                     <h3 class="product-name">${item.product?.name ?? "منتج بدون اسم"}</h3>
-                    <p class="product-price">السعر: <span>${item.unit_price} SYP</span></p>
+                    <p class="product-price">السعر: <span>${item.unit_price} SYP</span> ${usdItemLabel(item.unit_price)}</p>
                 </div>
 
                 <div class="actions-bottom">
                     <div class="quantity-control">
-                        <button class="btn-qty" onclick="updateQuantity(${item.id}, ${item.quantity - 1})">-</button>
+                        <button class="btn-qty" onclick="${item.quantity - 1 < 1 ? `removeItem(${item.id})` : `updateQuantity(${item.id}, ${item.quantity - 1})`}">-</button>
                         <input type="number" readonly value="${item.quantity}">
                         <button class="btn-qty" onclick="updateQuantity(${item.id}, ${item.quantity + 1})">+</button>
                     </div>
