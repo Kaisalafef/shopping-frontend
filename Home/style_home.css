@@ -1,0 +1,535 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap');
+
+:root {
+    --bg-body: #f8f9fa;       
+    --white: #ffffff;
+    --dark-blue: #232f3e;     
+    --light-blue: #405670d8;   
+    --accent-gold: #f0c14b;   
+    --accent-hover: #ddb347;
+    --text-main: #111827;
+    --text-gray: #6b7280;
+    --price-red: #e74c3c;
+    --border-color: #e5e7eb;
+    --success: #27ae60;
+    --danger: #ef4444;
+    --blue-btn: #2563eb;
+    --radius-lg: 16px;
+    --radius-md: 12px;
+}
+
+body {
+    font-family: 'Cairo', sans-serif;
+    background-color: var(--bg-body);
+    margin: 0;
+    padding: 0;
+    color: var(--text-main);
+    direction: rtl;
+    overflow-x: hidden;
+}
+
+/* =========================================
+   الحاويات الأساسية
+========================================= */
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 15px 40px;
+}
+
+.section-header {
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.section-header h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 0;
+    position: relative;
+    padding-bottom: 8px;
+}
+
+.section-header h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 40px;
+    height: 3px;
+    background: var(--accent-gold);
+    border-radius: 2px;
+}
+
+/* =========================================
+   التمرير الأفقي المحسن (App-Like Scroll)
+========================================= */
+.horizontal-scroll-wrapper {
+    display: flex;
+    overflow-x: auto;
+    gap: 15px; 
+    padding: 10px 5px 20px 5px; 
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory; /* لجعل السحب يتوقف عند العنصر بدقة */
+    scrollbar-width: none; /* إخفاء السكرول في فايرفوكس */
+}
+
+.horizontal-scroll-wrapper::-webkit-scrollbar {
+    display: none; /* إخفاء السكرول في كروم وسفاري */
+}
+
+/* =========================================
+   الأقسام (التصنيفات)
+========================================= */
+.pdf-card {
+    min-width: 80px;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    scroll-snap-align: start;
+}
+
+.pdf-card-inner {
+    background: var(--white);
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+    transition: all 0.3s ease;
+    border: 1px solid var(--border-color);
+}
+
+.pdf-card:hover .pdf-card-inner, 
+.pdf-card:active .pdf-card-inner {
+    background: var(--accent-gold);
+    border-color: var(--accent-gold);
+    transform: scale(1.05);
+}
+
+.pdf-card-inner i {
+    font-size: 1.5rem;
+    color: var(--dark-blue);
+    transition: color 0.3s ease;
+}
+
+.pdf-card:hover .pdf-card-inner i,
+.pdf-card:active .pdf-card-inner i {
+    color: var(--white);
+}
+
+.pdf-card-title {
+    color: var(--text-main);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/* =========================================
+   الإعلانات (Banners)
+========================================= */
+.ad-banner {
+    position: relative;
+    min-width: 85vw; /* عرض ممتاز للموبايل */
+    max-width: 600px;
+    height: 180px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    scroll-snap-align: center;
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+}
+
+@media(min-width: 768px){
+    .ad-banner { min-width: 60%; }
+}
+
+.ad-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to left, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.1) 100%);
+}
+
+.ad-content {
+    position: relative;
+    z-index: 2;
+    padding: 20px;
+    color: white;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.ad-content h3 {
+    font-size: 1.3rem;
+    margin: 0 0 10px 0;
+    font-weight: 700;
+}
+
+.ad-content button {
+    background: var(--accent-gold);
+    color: var(--dark-blue);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.delete-ad-btn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 5;
+    background: rgba(231, 76, 60, 0.9);
+    color: #fff;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+}
+/* أضف هذا الكود في نهاية ملف style_dashboard.css لإعادة تفعيل الإشعارات */
+#toast-box {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 9999;
+    max-width: 350px;
+    width: calc(100% - 40px);
+}
+
+.toast {
+    background: #fff;
+    color: #333;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    position: relative;
+    overflow: hidden;
+    transform: translateX(120%);
+    animation: slideIn 0.4s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.toast.success { border-right: 6px solid #2ecc71; }
+.toast.success i { color: #2ecc71; }
+
+.toast.error { border-right: 6px solid #e74c3c; }
+.toast.error i { color: #e74c3c; }
+
+.toast.warning { border-right: 6px solid #f1c40f; }
+.toast.warning i { color: #f1c40f; }
+
+.toast::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 3px;
+    background: rgba(0,0,0,0.05);
+    animation: timeOut 4s linear forwards;
+}
+
+.toast.hide {
+    animation: slideOut 0.4s forwards ease-in;
+}
+
+@keyframes slideIn {
+    to { transform: translateX(0); }
+}
+
+@keyframes slideOut {
+    to { transform: translateX(120%); opacity: 0; }
+}
+
+@keyframes timeOut {
+    to { width: 0; }
+}
+
+@media (max-width: 768px) {
+    #toast-box {
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+        bottom: 20px;
+    }
+    @keyframes slideIn {
+        from { transform: translate(-50%, 20px); opacity: 0; }
+        to { transform: translate(-50%, 0); opacity: 1; }
+    }
+    @keyframes slideOut {
+        to { transform: translate(-50%, 20px); opacity: 0; }
+    }
+}
+/* =========================================
+   العروض اليومية (المنتجات)
+========================================= */
+.offers-gold-box {
+    background: transparent;
+}
+
+.offers-inner-grid {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 10px 5px 20px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.offers-inner-grid::-webkit-scrollbar { display: none; }
+
+.offer-white-card {
+    background-color: var(--white);
+    border-radius: var(--radius-md);
+    width: 160px; /* عرض مناسب للموبايل */
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    position: relative;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    border: 1px solid var(--border-color);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+@media(min-width: 768px){
+    .offer-white-card { width: 200px; padding: 15px; }
+}
+
+.discount-circle {
+    position: absolute;
+    top: 8px;
+    right: 8px; /* تغيير لليمين ليتوافق مع اللغة العربية */
+    background: var(--danger);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    z-index: 2;
+}
+
+.offer-img-box {
+    width: 100%;
+    height: 140px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f9f9f9;
+}
+
+.offer-img-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.offer-details {
+    text-align: right;
+}
+
+.offer-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+    color: var(--text-main);
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* إظهار سطرين فقط للاسم */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.offer-prices {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.new-price {
+    color: var(--price-red);
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.old-price {
+    text-decoration: line-through;
+    color: var(--text-gray);
+    font-size: 0.85rem;
+}
+
+/* أزرار الأدمن */
+.admin-actions {
+    display: flex;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.action-btn {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    font-family: inherit;
+}
+.btn-delete { background-color: #fee2e2; color: #dc2626; }
+
+/* السعر بالدولار */
+.usd-price {
+    color: var(--text-gray);
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+/* زر تعديل سعر الصرف (Admin) */
+.btn-edit-rate {
+    background: var(--dark-blue);
+    color: var(--white);
+    border: none;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s ease;
+}
+
+.btn-edit-rate i { color: var(--accent-gold); }
+
+.btn-edit-rate:hover { background: #1a2431; }
+
+/* ===== نافذة تعديل سعر الصرف (Modal) ===== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.modal-overlay.active { display: flex; }
+
+.modal-content {
+    background: var(--white);
+    padding: 28px;
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 420px;
+    position: relative;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+}
+
+.close-modal-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: #f1f5f9;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 1rem;
+    color: var(--text-gray);
+    cursor: pointer;
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    color: var(--dark-blue);
+}
+
+.modal-header i { font-size: 1.4rem; color: var(--accent-gold); }
+.modal-header h3 { margin: 0; font-size: 1.15rem; }
+
+.form-group label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    color: var(--text-main);
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    font-family: inherit;
+    font-size: 0.95rem;
+    box-sizing: border-box;
+    outline: none;
+}
+
+.form-group input:focus {
+    border-color: var(--dark-blue);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.btn-cancel {
+    background: #f1f5f9;
+    color: var(--text-main);
+    border: none;
+    padding: 12px 20px;
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.btn-confirm-order {
+    background: var(--dark-blue);
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
