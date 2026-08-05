@@ -225,10 +225,22 @@ proceedShamcashBtn.addEventListener("click", async function () {
             shamcashWalletDisplay.textContent = data.wallet_address;
         }
 
-        // محاولة فتح تطبيق شام كاش مباشرة (deep link)
-        if (data.deep_link) {
-            window.location.href = data.deep_link;
-        }
+        // داخل حدث الضغط على proceedShamcashBtn في pay.js
+if (data.deep_link) {
+    tryToOpenApp(data.deep_link);
+}
+
+function tryToOpenApp(url) {
+    // إنشاء عنصر iframe مخفي لتحفيز فتح التطبيق بدون تعطيل الصفحة
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    iframe.src = url;
+    document.body.appendChild(iframe);
+
+    setTimeout(() => {
+        document.body.removeChild(iframe);
+    }, 1500);
+}
 
         // إظهار حالة الانتظار وبدء الاستعلام عن حالة الطلب
         proceedShamcashBtn.classList.add("hidden");
