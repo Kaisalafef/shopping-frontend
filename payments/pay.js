@@ -219,11 +219,13 @@ proceedShamcashBtn.addEventListener("click", async function () {
         if (!res.ok) {
             throw new Error(data.message || "فشل إنشاء فاتورة الدفع");
         }
-
-        shamcashAmountEl.textContent = `${data.amount} ${data.currency === "USD" ? "USD" : "ل.س"}`;
-        if (data.wallet_address) {
-            shamcashWalletDisplay.textContent = data.wallet_address;
-        }
+shamcashAmountEl.textContent = `${data.amount} ${data.currency === "USD" ? "USD" : "ل.س"}`;
+if (data.wallet_address) {
+    shamcashWalletDisplay.textContent = data.wallet_address;
+}
+proceedShamcashBtn.classList.add("hidden");
+shamcashWaiting.classList.remove("hidden");
+startShamcashPolling(data.order_id);
 
         // داخل حدث الضغط على proceedShamcashBtn في pay.js
 if (data.deep_link) {
