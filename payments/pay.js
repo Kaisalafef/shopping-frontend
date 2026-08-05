@@ -31,6 +31,10 @@ const shamcashWaiting = document.getElementById("shamcashWaiting");
 let qrImages = {};
 let paymentSettings = { shamcash: { qr_url: null, wallet_address: null } };
 let shamcashPollTimer = null;
+let currentShamcashOrderId = null;
+
+const shamcashTranIdInput = document.getElementById("shamcashTranId");
+const confirmShamcashBtn = document.getElementById("confirmShamcashPayment");
 
 function getSelectedCurrency() {
     const selected = document.querySelector('input[name="currency"]:checked');
@@ -223,31 +227,66 @@ shamcashAmountEl.textContent = `${data.amount} ${data.currency === "USD" ? "USD"
 if (data.wallet_address) {
     shamcashWalletDisplay.textContent = data.wallet_address;
 }
+
+// لا يوجد رابط لفتح التطبيق تلقائياً - شام كاش لا يدعم هذه الميزة.
+// الزبون يفتح تطبيقه يدوياً ويرسل المبلغ للعنوان المعروض أعلاه.
+currentShamcashOrderId = data.order_id;
 proceedShamcashBtn.classList.add("hidden");
 shamcashWaiting.classList.remove("hidden");
 startShamcashPolling(data.order_id);
-
-        // داخل حدث الضغط على proceedShamcashBtn في pay.js
-if (data.deep_link) {
-    tryToOpenApp(data.deep_link);
-}
-
-function tryToOpenApp(url) {
-    // التنقل المباشر - يعمل فعلياً لفتح custom scheme على الموبايل
-    window.location.href = url;
-}
-
-        // إظهار حالة الانتظار وبدء الاستعلام عن حالة الطلب
-        proceedShamcashBtn.classList.add("hidden");
-        shamcashWaiting.classList.remove("hidden");
-
-        startShamcashPolling(data.order_id);
 
     } catch (error) {
         console.error(error);
         alert(error.message || "حدث خطأ أثناء تجهيز الدفع عبر شام كاش");
         proceedShamcashBtn.disabled = false;
         proceedShamcashBtn.textContent = "متابعة إلى شام كاش";
+    }
+});
+
+// تأكيد يدوي فوري: الزبون يدخل رقم العملية (tran_id) من تطبيق شام كاش
+// بعد إتمام التحويل، ونتحقق منه مباشرة بدل انتظار الـ webhook فقط
+confirmShamcashBtn.addEventListener("click", async function () {
+    const tranId = shamcashTranIdInput.value.trim();
+
+    if (!tranId) {
+        alert("الرجاء إدخال رقم العملية الظاهر في تطبيق شام كاش");
+        return;
+    }
+
+    if (!currentShamcashOrderId) {
+        alert("حدث خطأ، الرجاء إعادة المحاولة من البداية");
+        return;
+    }
+
+    confirmShamcashBtn.disabled = true;
+    confirmShamcashBtn.textContent = "جارِ التحقق...";
+
+    try {
+        const res = await fetch(`${API_URL}/payments/shamcash/${currentShamcashOrderId}/confirm`, {
+            method: "POST",
+            headers,
+            body: JSON.stringify({ tran_id: tranId })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            throw new Error(data.message || "تعذر التحقق من رقم العملية");
+        }
+
+        stopShamcashPolling();
+        shamcashWaiting.innerHTML = `<p>✔ تم تأكيد الدفع وقبول طلبك بنجاح</p>`;
+        localStorage.removeItem("checkout_address");
+
+        setTimeout(() => {
+            window.location.href = "/Home/client_dashboard.html";
+        }, 1500);
+
+    } catch (error) {
+        console.error(error);
+        alert(error.message || "رقم العملية غير صحيح أو لم يتم التأكد من الدفع بعد");
+        confirmShamcashBtn.disabled = false;
+        confirmShamcashBtn.textContent = "تأكيد رقم العملية";
     }
 });
 

@@ -80,10 +80,13 @@
 
         <button id="proceedShamcash">متابعة إلى شام كاش</button>
 
-        <!-- حالة انتظار تأكيد الدفع -->
+        <!-- حالة انتظار تأكيد الدفع + إدخال رقم العملية يدوياً -->
         <div id="shamcashWaiting" class="hidden">
             <div class="spinner"></div>
-            <p>بانتظار تأكيد الدفع من شام كاش...</p>
+            <p>بعد إتمام التحويل من تطبيق شام كاش، أدخل رقم العملية الظاهر لديك لتأكيد الدفع فوراً:</p>
+            <input type="text" id="shamcashTranId" class="shamcash-tran-input" placeholder="مثال: 368916038">
+            <button id="confirmShamcashPayment" type="button">تأكيد رقم العملية</button>
+            <p class="shamcash-note" style="margin-top:10px;">أو انتظر التأكيد التلقائي خلال دقائق</p>
         </div>
     </div>
 </div>

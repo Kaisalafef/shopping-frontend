@@ -358,3 +358,31 @@ button:active {
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
+/* حقل إدخال رقم عملية شام كاش (tran_id) */
+.shamcash-tran-input {
+    width: 100%;
+    padding: 11px 14px;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.95rem;
+    direction: ltr;
+    text-align: center;
+    margin: 14px 0 10px;
+    letter-spacing: 1px;
+}
+
+.shamcash-tran-input:focus {
+    outline: none;
+    border-color: var(--accent-gold);
+}
+
+#confirmShamcashPayment {
+    margin-top: 4px;
+    background: var(--success);
+    color: white;
+}
+
+#confirmShamcashPayment:hover {
+    background: var(--success-hover);
+}
