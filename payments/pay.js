@@ -231,15 +231,8 @@ if (data.deep_link) {
 }
 
 function tryToOpenApp(url) {
-    // إنشاء عنصر iframe مخفي لتحفيز فتح التطبيق بدون تعطيل الصفحة
-    const iframe = document.createElement('iframe');
-    iframe.style.display = 'none';
-    iframe.src = url;
-    document.body.appendChild(iframe);
-
-    setTimeout(() => {
-        document.body.removeChild(iframe);
-    }, 1500);
+    // التنقل المباشر - يعمل فعلياً لفتح custom scheme على الموبايل
+    window.location.href = url;
 }
 
         // إظهار حالة الانتظار وبدء الاستعلام عن حالة الطلب
