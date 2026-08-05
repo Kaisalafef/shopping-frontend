@@ -14,6 +14,21 @@
     <h1>اختر طريقة الدفع</h1>
     <p class="payment-subtitle">حدد الطريقة الأنسب لإتمام عملية الدفع بأمان</p>
 
+    <!-- اختيار العملة -->
+    <div class="currency-select">
+        <span class="currency-label">الدفع بعملة:</span>
+        <div class="currency-options">
+            <label class="currency-option">
+                <input type="radio" name="currency" value="SYP" checked>
+                <span>ليرة سورية</span>
+            </label>
+            <label class="currency-option">
+                <input type="radio" name="currency" value="USD">
+                <span>دولار أمريكي</span>
+            </label>
+        </div>
+    </div>
+
     <div class="payment-options">
         <label class="option">
             <input type="radio" name="payment" value="cash">
@@ -37,7 +52,7 @@
     <button id="submitOrder" class="hidden">إرسال الطلب</button>
 </div>
 
-<!-- Popup QR -->
+<!-- Popup QR (USDT فقط) -->
 <div id="qrModal" class="modal">
     <div class="modal-content">
         <span id="closeModal">&times;</span>
@@ -45,6 +60,31 @@
         <img id="qrImage" src="" alt="QR Code">
         <br>
          <button id="donePayment">تم الدفع</button>
+    </div>
+</div>
+
+<!-- Dialog تأكيد قبل الذهاب لتطبيق شام كاش -->
+<div id="shamcashModal" class="modal">
+    <div class="modal-content">
+        <span id="closeShamcashModal">&times;</span>
+        <h2>الدفع عبر شام كاش</h2>
+        <p class="shamcash-amount">
+            المبلغ المطلوب: <strong id="shamcashAmount">--</strong>
+        </p>
+        <p class="shamcash-note">
+            سيتم فتح تطبيق شام كاش لإتمام عملية الدفع. إذا لم يفتح التطبيق
+            تلقائياً على جهازك، يمكنك الدفع يدوياً إلى محفظتنا:
+        </p>
+        <p class="shamcash-wallet" id="shamcashWalletDisplay">--</p>
+        <img id="shamcashQr" src="" alt="QR شام كاش" class="hidden">
+
+        <button id="proceedShamcash">متابعة إلى شام كاش</button>
+
+        <!-- حالة انتظار تأكيد الدفع -->
+        <div id="shamcashWaiting" class="hidden">
+            <div class="spinner"></div>
+            <p>بانتظار تأكيد الدفع من شام كاش...</p>
+        </div>
     </div>
 </div>
 
