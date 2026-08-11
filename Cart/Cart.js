@@ -145,30 +145,22 @@ function renderCartItems(items) {
         `;
     });
 }
-
+// The routes are: /carts/{cart}/items/{item} (not /carts/{cartId}/items/{itemId})
 async function updateQuantity(itemId, quantity) {
     if (!CURRENT_CART_ID || quantity < 1) return;
-
     try {
-        const res = await fetch(
-            `${API_URL}/carts/${CURRENT_CART_ID}/items/${itemId}`,
-            {
-                method: "PUT",
-                headers,
-                body: JSON.stringify({ quantity: Number(quantity) })
-            }
-        );
-
+        const res = await fetch(`${API_URL}/carts/${CURRENT_CART_ID}/items/${itemId}`, {
+            method: "PUT",
+            headers,
+            body: JSON.stringify({ quantity: Number(quantity) })
+        });
         if (!res.ok) throw new Error();
-
-        
         getUserCart();
-
     } catch (error) {
-        console.error(error);
-        showToast("فشل تحديث الكمية","error");
+        showToast("فشل تحديث الكمية", "error");
     }
 }
+
 
 
 async function removeItem(itemId) {
@@ -231,7 +223,7 @@ window.onclick = function(event) {
     }
 }
 
-
+// In Cart.js submitOrder function - store more data for payment page
 async function submitOrder(event) {
     event.preventDefault();
 
@@ -242,21 +234,22 @@ async function submitOrder(event) {
         return;
     }
 
-    // نخزن العنوان مؤقتاً
+    // نحسب الإجمالي الحالي من السلة
+    const totalSyp = CURRENT_TOTAL_SYP;
+    const exchangeRate = EXCHANGE_RATE;
+    const usdTotal = exchangeRate ? totalSyp / exchangeRate : null;
+
+    // نخزن كل البيانات المطلوبة لصفحة الدفع
     localStorage.setItem("checkout_address", address);
+    localStorage.setItem("checkout_total_syp", totalSyp.toFixed(2));
+    localStorage.setItem("checkout_exchange_rate", exchangeRate?.toFixed(4) || "");
+    localStorage.setItem("checkout_total_usd", usdTotal ? usdTotal.toFixed(2) : "");
+    localStorage.setItem("checkout_currency", "SYP"); // سيتم تغييره في صفحة الدفع
 
-    // نخزن الإجمالي وسعر الصرف المستخدم وقت الطلب لعرضهما في صفحة الدفع
-    const usdTotal = sypToUsd(CURRENT_TOTAL_SYP);
-    localStorage.setItem("checkout_total_syp", CURRENT_TOTAL_SYP);
-    localStorage.setItem("checkout_exchange_rate", EXCHANGE_RATE ?? "");
-    localStorage.setItem("checkout_total_usd", usdTotal !== null ? usdTotal.toFixed(2) : "");
-
-    // نغلق المودال
     closeCheckoutModal();
-
-    // ننتقل لصفحة الدفع
     window.location.href = "/payments/pay.html";
 }
+
 
 document.addEventListener("DOMContentLoaded", async () => {
     await fetchExchangeRate();

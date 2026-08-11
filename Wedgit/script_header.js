@@ -145,7 +145,14 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
-
+setInterval(async () => {
+    if (!localStorage.getItem('token')) return;
+    try {
+        const res = await fetch(`${API_URL}/notifications`, { headers });
+        const data = await res.json();
+        // Show unread count in header
+    } catch (e) {}
+}, 30000);
     
     const logoutBtn = document.getElementById("logoutBtn");
     if (logoutBtn) {

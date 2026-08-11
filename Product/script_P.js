@@ -222,12 +222,13 @@ btnDec.addEventListener("click", () => {
   if (value > 1) qtyInput.value = value - 1;
 });
 
+// In script_P.js - replace the addBtn event listener (around line 260-290)
 
 addBtn.addEventListener("click", () => {
   const quantity = parseInt(qtyInput.value || 1);
 
   if (!quantity || quantity < 1) {
-    showToast("يرجى إدخال كمية صحيحة","warning");
+    showToast("يرجى إدخال كمية صحيحة", "warning");
     return;
   }
 
@@ -243,13 +244,36 @@ addBtn.addEventListener("click", () => {
 
   const token = localStorage.getItem("token");
 
+  // Show loading state
+  const btnText = document.getElementById("pw-btn-text");
+  const originalText = btnText.textContent;
+  btnText.textContent = "جاري الإضافة...";
+  addBtn.disabled = true;
+
   fetch(`${API_BASE}/my-cart`, {
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
+      Accept: "application/json",  // Important: ensure JSON response
     },
   })
-    .then((res) => res.json())
+    .then(async (res) => {
+      // Check if response is OK before parsing JSON
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error("Cart fetch failed:", res.status, errorText);
+        throw new Error(`فشل جلب السلة: ${res.status} - ${errorText.substring(0, 100)}`);
+      }
+      
+      const contentType = res.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        const text = await res.text();
+        console.error("Non-JSON response:", text.substring(0, 200));
+        throw new Error("استجابة غير متوقعة من السيرفر");
+      }
+      
+      return res.json();
+    })
     .then((cart) => {
       const cartId = cart.id;
       const payload = {
@@ -264,11 +288,19 @@ addBtn.addEventListener("click", () => {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
+          Accept: "application/json",
         },
         body: JSON.stringify(payload),
       });
     })
-    .then((res) => res.json())
+    .then(async (res) => {
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error("Add to cart failed:", res.status, errorText);
+        throw new Error(`فشل إضافة المنتج: ${res.status}`);
+      }
+      return res.json();
+    })
     .then((item) => {
       console.log("تمت إضافة المنتج:", item);
       showToast("تمت إضافة المنتج إلى السلة بنجاح ✅", "success");
@@ -276,9 +308,15 @@ addBtn.addEventListener("click", () => {
     })
     .catch((err) => {
       console.error(err);
-      showToast("حدث خطأ أثناء إضافة المنتج أو الحصول على السلة", "error");
+      showToast(err.message || "حدث خطأ أثناء إضافة المنتج", "error");
+    })
+    .finally(() => {
+      // Reset button state
+      btnText.textContent = originalText;
+      addBtn.disabled = false;
     });
 });
+
 reviewBtn.addEventListener("click", (e) => {
   e.preventDefault();
 

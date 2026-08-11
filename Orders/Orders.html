@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إدارة الطلبات - لوحة التحكم</title>
+    <title>سجل الطلبات التجاري - لوحة التحكم</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/Wedgit/style_footer.css">
     <link rel="stylesheet" href="/Wedgit/style_header.css">
     <link rel="stylesheet" href="style_Orders.css">
@@ -20,6 +20,7 @@
           </button>
           <ul class="dropdown" id="desktopDropdown">
             <li><a href="/Profile/Profile.html"><i class="fas fa-user-circle"></i> حسابي</a></li>
+            <li><a href="/Profile/MyOrders.html"><i class="fas fa-box"></i> طلباتي</a></li>
             <li class="admin-only" style="display: none;"><a href="/ADS/Add_ADS.html"><i class="fas fa-bullhorn"></i> إضافة إعلانات</a></li>
             <li class="admin-only" style="display: none;"><a href="/Discount/Add_Discount.html"><i class="fas fa-tags"></i> إضافة خصومات</a></li>
             <li class="admin-only" style="display: none;"><a href="/Add Proudct/add_Proudct.html"><i class="fas fa-add"></i> إضافة منتجات</a></li>
@@ -42,24 +43,36 @@
 
     <main class="admin-orders-wrapper">
         <div class="page-header">
-            <h1><i class="fas fa-clipboard-list"></i> إدارة الطلبات</h1>
+            <h1><i class="fas fa-book-open"></i> السجل التجاري للطلبات</h1>
             <div class="stats-row">
-                <div class="stat-card">
-                    <span class="stat-label">إجمالي الطلبات</span>
-                    <span class="stat-value" id="total-orders-count">0</span>
-                </div>
-                <div class="stat-card pending">
-                    <span class="stat-label">قيد الانتظار</span>
-                    <span class="stat-value" id="pending-orders-count">0</span>
-                </div>
+                <div class="stat-card"><span class="stat-label">إجمالي الطلبات</span><span class="stat-value" id="total-orders-count">0</span></div>
+                <div class="stat-card pending"><span class="stat-label">قيد الانتظار</span><span class="stat-value" id="pending-orders-count">0</span></div>
+                <div class="stat-card approval"><span class="stat-label">انتظار موافقة</span><span class="stat-value" id="pending-approval-count">0</span></div>
+                <div class="stat-card processing"><span class="stat-label">قيد المعالجة</span><span class="stat-value" id="processing-orders-count">0</span></div>
+                <div class="stat-card cancelled"><span class="stat-label">ملغية</span><span class="stat-value" id="cancelled-orders-count">0</span></div>
             </div>
         </div>
 
         <div class="filters-container">
             <button class="filter-btn active" data-filter="all">الكل</button>
             <button class="filter-btn" data-filter="pending">قيد الانتظار</button>
-            <button class="filter-btn" data-filter="processing">تمت الموافقة </button>
-            <button class="filter-btn" data-filter="cancelled">ملغى</button>
+            <button class="filter-btn" data-filter="pending_approval">⏳ انتظار موافقة</button>
+            <button class="filter-btn" data-filter="processing">قيد المعالجة</button>
+            <button class="filter-btn" data-filter="cancelled">ملغية</button>
+            <button class="filter-btn" data-filter="completed">مكتملة</button>
+            
+            <div class="filter-group">
+                <input type="date" id="filter-date-from" title="من تاريخ">
+                <input type="date" id="filter-date-to" title="إلى تاريخ">
+                <select id="filter-payment-method">
+                    <option value="">كل طرق الدفع</option>
+                    <option value="cash">كاش عند الاستلام</option>
+                    <option value="shamcash">شام كاش</option>
+                    <option value="usdt">USDT</option>
+                </select>
+                <button class="filter-btn" id="export-orders" type="button"><i class="fas fa-file-excel"></i> تصدير Excel</button>
+                <button class="filter-btn" id="clear-filters" type="button"><i class="fas fa-eraser"></i> مسح الفلاتر</button>
+            </div>
         </div>
 
         <div class="table-container">
@@ -72,22 +85,20 @@
                         <th>تاريخ الطلب</th>
                         <th>المبلغ الإجمالي</th>
                         <th>طريقة الدفع</th>
+                        <th>رقم العملية</th>
+                        <th>اسم المرسل</th>
                         <th>الحالة</th>
                         <th>الإجراءات</th>
                     </tr>
                 </thead>
-                <tbody id="orders-table-body">
-                    </tbody>
+                <tbody id="orders-table-body"></tbody>
             </table>
-            <div id="loading-spinner" class="spinner" style="display:none;">
-                <i class="fas fa-circle-notch fa-spin"></i> جاري التحميل...
-            </div>
-            <div id="no-orders-msg" style="display:none; text-align:center; padding: 20px;">
-                لا توجد طلبات لعرضها.
-            </div>
+            <div id="loading-spinner" class="loading-spinner" style="display:none;"><i class="fas fa-circle-notch fa-spin"></i> جاري التحميل...</div>
+            <div id="no-orders-msg" class="no-orders-msg" style="display:none;">لا توجد طلبات لعرضها.</div>
         </div>
     </main>
 
+    <!-- Order Detail Modal -->
     <div id="order-modal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
@@ -95,62 +106,66 @@
                 <button class="close-modal" id="closeModalBtn">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="customer-info-box">
-                    <p><strong><i class="fas fa-user"></i> الزبون:</strong> <span id="modal-customer-name">-</span></p>
-                    <p><strong><i class="fas fa-phone"></i> الهاتف:</strong> <span id="modal-customer-phone">-</span></p>
-                    <p><strong><i class="fas fa-map-marker-alt"></i> العنوان:</strong> <span id="modal-address">-</span></p>
+                <div class="customer-info-box" id="modal-customer-info">
+                    <!-- Populated by JS -->
                 </div>
                 
                 <h4 class="items-title">المنتجات المطلوبة:</h4>
-                <div class="order-items-list" id="modal-items-list">
-                    </div>
+                <div class="order-items-list" id="modal-items-list"></div>
             </div>
             <div class="modal-footer">
                 <div class="total-row">
                     <span>الإجمالي:</span>
                     <span id="modal-total-price" class="price-text">0</span>
                 </div>
-                <div class="modal-actions" id="modal-actions-container">
-                    </div>
+                <div class="modal-actions" id="modal-actions-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rejection Reason Modal -->
+    <div id="rejection-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-ban"></i> رفض الدفع - طلب سبب إلزامي</h3>
+                <button class="close-modal" id="closeRejectionModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="color: var(--text-secondary); margin-bottom: 16px;">يرجى إدخال سبب مفصل لرفض هذا الدفع. سيتم إرسال السبب للعميل تلقائياً.</p>
+                <textarea id="rejection-reason-textarea" placeholder="مثال: رقم العملية غير صحيح، المبلغ لا يطابق الفاتورة، صورة الإيصال غير واضحة..."></textarea>
+            </div>
+            <div class="modal-footer">
+                <span></span>
+                <div class="modal-actions">
+                    <button class="action-btn btn-cancel-neutral" onclick="closeRejectionModal()"><i class="fas fa-times"></i> إلغاء</button>
+                    <button class="action-btn btn-reject-payment" id="confirm-rejection-btn"><i class="fas fa-check"></i> تأكيد الرفض</button>
+                </div>
             </div>
         </div>
     </div>
 
     <footer class="main-footer">
-        
-
         <div class="footer-container">
             <div class="footer-row">
-                
                 <div class="footer-col footer-about">
-                    <a href="#" class="footer-logo-link">
-                        <img src="/images/logoo.webp" alt="Logo" class="footer-logo">
-                    </a>
-                    <p class="footer-desc">
-                        متجرك الرقمي الأول لتسوق أحدث المنتجات بأفضل الأسعار. 
-                        نجمع بين الجودة، السرعة، والأمان لضمان تجربة تسوق لا تُنسى.
-                    </p>
+                    <a href="#" class="footer-logo-link"><img src="/images/logoo.webp" alt="Logo" class="footer-logo"></a>
+                    <p class="footer-desc">متجرك الرقمي الأول لتسوق أحدث المنتجات بأفضل الأسعار. نجمع بين الجودة، السرعة، والأمان.</p>
                 </div>
-
                 <div class="footer-col footer-links">
                     <h3>روابط هامة</h3>
                     <ul id="footerLinksList">
                         <li><a href="/Wedgit/About.html"><i class="fas fa-angle-left"></i> من نحن</a></li>
-                        
                         <li class="client-link" style="display: none;"><a href="/Home/client_dashboard.html"><i class="fas fa-angle-left"></i> الرئيسية</a></li>
                         <li class="client-link" style="display: none;"><a href="/Profile/Profile.html"><i class="fas fa-angle-left"></i> حسابي</a></li>
+                        <li class="client-link" style="display: none;"><a href="/Profile/MyOrders.html"><i class="fas fa-angle-left"></i> طلباتي</a></li>
                         <li class="client-link" style="display: none;"><a href="/Cart/Cart.html"><i class="fas fa-angle-left"></i> سلة المشتريات</a></li>
-
                         <li class="admin-link" style="display: none;"><a href="/Home/admin_dashboard.html"><i class="fas fa-angle-left"></i> لوحة التحكم</a></li>
                         <li class="admin-link" style="display: none;"><a href="/ADS/Add_ADS.html"><i class="fas fa-angle-left"></i> إدارة الإعلانات</a></li>
                         <li class="admin-link" style="display: none;"><a href="/Add Proudct/add_Proudct.html"><i class="fas fa-angle-left"></i> إدارة المنتجات</a></li>
-
                         <li class="admin-link" style="display: none;"><a href="/Discount/Add_Discount.html"><i class="fas fa-angle-left"></i> إدارة الخصومات</a></li>
-                                            <li class="admin-link" style="display: none;"><a href="/Orders/Orders.html"><i class="fas fa-angle-left"></i> سجل الطلبات </a></li>
-
+                        <li class="admin-link" style="display: none;"><a href="/Orders/Orders.html"><i class="fas fa-angle-left"></i> سجل الطلبات </a></li>
                     </ul>
                 </div>
-
                 <div class="footer-col footer-contact">
                     <h3>تواصل معنا</h3>
                     <div class="social-icons">
@@ -164,19 +179,18 @@
                         <p><i class="fas fa-phone"></i> +963 999 999 999</p>
                     </div>
                 </div>
-
             </div>
         </div>
-
-        <div class="footer-bottom">
-            <p>جميع الحقوق محفوظة &copy; <span id="year"></span> لمتجرنا الإلكتروني.</p>
-        </div>
+        <div class="footer-bottom"><p>جميع الحقوق محفوظة &copy; <span id="year"></span> لمتجرنا الإلكتروني.</p></div>
     </footer>
-        <script src="/Auth/auth_guard.js"></script>
+
+    <script src="/Auth/auth_guard.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="/Wedgit/script_header.js"></script>
     <script src="/Wedgit/script_footer.js"></script>
     <script src="script_Orders.js"></script>
-
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
 </body>
 </html>

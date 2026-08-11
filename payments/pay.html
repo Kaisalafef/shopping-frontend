@@ -39,55 +39,103 @@
         <label class="option">
             <input type="radio" name="payment" value="shamcash">
             <i class="fa-solid fa-wallet"></i>
-            <span>الدفع عبر شام كاش</span>
+            <span>شام كاش (تحويل يدوي)</span>
         </label>
 
         <label class="option">
             <input type="radio" name="payment" value="usdt">
             <i class="fa-solid fa-coins"></i>
-            <span>الدفع عبر USDT</span>
+            <span>USDT (تحويل يدوي)</span>
         </label>
     </div>
 
-    <button id="submitOrder" class="hidden">إرسال الطلب</button>
+    <button id="submitOrder" class="hidden">إرسال الطلب (كاش)</button>
 </div>
 
-<!-- Popup QR (USDT فقط) -->
-<div id="qrModal" class="modal">
+<!-- Modal موحد لطرق الدفع اليدوية (شام كاش و USDT) -->
+<div id="manualPaymentModal" class="modal">
     <div class="modal-content">
-        <span id="closeModal">&times;</span>
-        <h2>قم بمسح رمز QR لإتمام الدفع</h2>
-        <img id="qrImage" src="" alt="QR Code">
-        <br>
-         <button id="donePayment">تم الدفع</button>
+        <span id="closeManualModal">&times;</span>
+        
+        <!-- الخطوة 1: عرض معلومات الدفع -->
+        <div id="paymentInfoStep">
+            <h2 id="paymentMethodTitle">--</h2>
+            <p class="payment-amount">المبلغ المطلوب: <strong id="displayAmount">--</strong></p>
+            <p class="payment-note" id="paymentInstructions">--</p>
+            
+            <div class="wallet-info">
+                <div class="wallet-field">
+                    <label id="walletLabel">عنوان المحفظة:</label>
+                    <div class="wallet-value">
+                        <span id="walletAddress" class="copyable">--</span>
+                        <button type="button" class="copy-btn" onclick="copyWalletAddress()" title="نسخ العنوان">
+                            <i class="fa-solid fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="networkInfo" class="hidden">
+                    <label>الشبكة:</label>
+                    <span id="networkValue">--</span>
+                </div>
+
+                <div class="qr-section">
+                    <img id="paymentQr" src="" alt="QR Code" class="hidden">
+                </div>
+            </div>
+
+            <p class="next-step-note">بعد إتمام التحويل من تطبيقك، اضغط "لقد أتممت الدفع" لإدخال بيانات الإثبات</p>
+            <button id="proceedToProof" class="primary-btn">لقد أتممت الدفع</button>
+        </div>
+
+        <!-- الخطوة 2: نموذج إثبات الدفع -->
+        <div id="proofFormStep" class="hidden">
+            <h2>إرسال إثبات الدفع</h2>
+            <p class="proof-note">يرجى ملء البيانات التالية ليتم مراجعة دفعتك من قبل الإدارة</p>
+            
+            <form id="proofForm">
+                <div class="form-group">
+                    <label for="senderName">اسم المرسل <span class="required">*</span></label>
+                    <input type="text" id="senderName" name="sender_name" required placeholder="كما يظهر في عملية التحويل">
+                </div>
+
+                <div class="form-group">
+                    <label for="transactionId">رقم العملية / المعاملة (TxID) <span class="required">*</span></label>
+                    <input type="text" id="transactionId" name="transaction_id" required placeholder="مثال: 368916038 أو 0x123abc...">
+                </div>
+
+                <div class="form-group">
+                    <label for="proofImage">صورة الإيصال (اختياري)</label>
+                    <input type="file" id="proofImage" name="proof_image" accept="image/*">
+                    <small>يُنصح بإرفاق سكرين شوت لعملية التحويل</small>
+                </div>
+
+                <button type="submit" class="primary-btn" id="submitProofBtn">
+                    <span class="btn-text">إرسال للمراجعة</span>
+                    <span class="btn-loader hidden"><i class="fa-solid fa-spinner fa-spin"></i> جاري الإرسال...</span>
+                </button>
+            </form>
+        </div>
+
+        <!-- الخطوة 3: انتظار المراجعة -->
+        <div id="waitingApprovalStep" class="hidden">
+            <div class="success-icon"><i class="fa-solid fa-clock"></i></div>
+            <h2>تم استلام إثبات الدفع</h2>
+            <p>طلبك الآن في حالة <strong>انتظار موافقة الإدارة</strong></p>
+            <p class="waiting-note">سيتم مراجعة دفعتك خلال وقت قصير. ستتلقى إشعاراً عند الموافقة أو الرفض.</p>
+            <button id="goToOrders" class="secondary-btn">الذهاب لطلباتي</button>
+        </div>
     </div>
 </div>
 
-<!-- Dialog تأكيد قبل الذهاب لتطبيق شام كاش -->
-<div id="shamcashModal" class="modal">
+<!-- Modal للكاش (بسيط) -->
+<div id="cashModal" class="modal">
     <div class="modal-content">
-        <span id="closeShamcashModal">&times;</span>
-        <h2>الدفع عبر شام كاش</h2>
-        <p class="shamcash-amount">
-            المبلغ المطلوب: <strong id="shamcashAmount">--</strong>
-        </p>
-        <p class="shamcash-note">
-            سيتم فتح تطبيق شام كاش لإتمام عملية الدفع. إذا لم يفتح التطبيق
-            تلقائياً على جهازك، يمكنك الدفع يدوياً إلى محفظتنا:
-        </p>
-        <p class="shamcash-wallet" id="shamcashWalletDisplay">--</p>
-        <img id="shamcashQr" src="" alt="QR شام كاش" class="hidden">
-
-        <button id="proceedShamcash">متابعة إلى شام كاش</button>
-
-        <!-- حالة انتظار تأكيد الدفع + إدخال رقم العملية يدوياً -->
-        <div id="shamcashWaiting" class="hidden">
-            <div class="spinner"></div>
-            <p>بعد إتمام التحويل من تطبيق شام كاش، أدخل رقم العملية الظاهر لديك لتأكيد الدفع فوراً:</p>
-            <input type="text" id="shamcashTranId" class="shamcash-tran-input" placeholder="مثال: 368916038">
-            <button id="confirmShamcashPayment" type="button">تأكيد رقم العملية</button>
-            <p class="shamcash-note" style="margin-top:10px;">أو انتظر التأكيد التلقائي خلال دقائق</p>
-        </div>
+        <span id="closeCashModal">&times;</span>
+        <h2>الدفع كاش عند الاستلام</h2>
+        <p>سيتم التواصل معكم لتأكيد العنوان وموعد التوصيل.</p>
+        <p class="cash-amount">المبلغ الإجمالي: <strong id="cashAmount">--</strong></p>
+        <button id="confirmCashOrder" class="primary-btn">تأكيد الطلب كاش</button>
     </div>
 </div>
 
