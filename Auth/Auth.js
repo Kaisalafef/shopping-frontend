@@ -52,6 +52,10 @@ if (loginForm) {
         } else {
           window.location.replace("/Home/client_dashboard.html");
         }
+      } else if (res.status === 403 && data.requires_verification) {
+        
+        localStorage.setItem("pending_phone", data.phone);
+        window.location.href = "/Auth/Verify_otp.html";
       } else {
         const msg =
           data.message || "البريد الإلكتروني أو كلمة المرور غير صحيحة";
@@ -82,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value;
     const passwordcomf = document.getElementById("passwordcomf").value;
-    const phone = document.getElementById("phone").value;
+    const phone = document.getElementById("phone").value.trim();
     if (!name || !email || !password || !phone) {
       showSignupError("الرجاء ملء جميع الحقول المطلوبة");
       return;
@@ -110,19 +114,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const data = await res.json();
 
-      if (res.ok && data.token) {
+      if (res.status === 201 && data.phone) {
         
-        localStorage.clear();
-
-        
-        localStorage.setItem("token", data.token);
-        localStorage.setItem(
-          "auth_role",
-          data.user.role || "user" 
-        );
-        localStorage.setItem("auth_user", JSON.stringify(data.user));
-
-        window.location.href = "/Home/client_dashboard.html";
+        localStorage.setItem("pending_phone", data.phone);
+        window.location.href = "/Auth/Verify_otp.html";
       } else {
         
         

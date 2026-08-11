@@ -7,7 +7,8 @@
   
   const publicPages = [
     "/Auth/Log_in.html",
-    "/Auth/Sign_up.html"
+    "/Auth/Sign_up.html",
+    "/Auth/Verify_otp.html"
   ];
 
   
