@@ -114,7 +114,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const data = await res.json();
 
-      if (res.status === 201 && data.phone) {
+      if (res.status === 201 && data.token) {
+        
+        localStorage.clear();
+
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("auth_role", data.user.role);
+        localStorage.setItem("auth_user", JSON.stringify(data.user));
+
+        window.location.replace("/Home/client_dashboard.html");
+      } else if (res.status === 201 && data.phone) {
         
         localStorage.setItem("pending_phone", data.phone);
         window.location.href = "/Auth/Verify_otp.html";
