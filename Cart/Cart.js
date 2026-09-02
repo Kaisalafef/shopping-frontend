@@ -116,12 +116,12 @@ function renderCartItems(items) {
 
     items.forEach(item => {
         // التحقق من وجود الصورة أو استخدام صورة افتراضية في حال عدم وجودها
-        const imageUrl = item.product?.image_url || item.product?.image || '/images/logo.webp';
+        const imageUrl = item.product?.image_url || item.product?.image || '/images/looogo.png';
 
         grid.innerHTML += `
         <div class="product-card">
             <div class="product-image-thumb">
-                <img src="${imageUrl}" alt="${item.product?.name ?? "منتج"}" onerror="this.src='/images/logo.webp'">
+                <img src="${imageUrl}" alt="${item.product?.name ?? "منتج"}" onerror="this.src='/images/looogo.png'">
             </div>
             <div class="product-details">
                 <div class="info-top">

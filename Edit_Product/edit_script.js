@@ -1,6 +1,3 @@
-
-
-
 const categoryTitles = {
     'electronics': 'الإلكترونيات',
     'food': 'المواد الغذائية',
@@ -43,9 +40,58 @@ const categoryTitles = {
       });
     }, 4000);
   }
+let currentExchangeRate = null;
+
+// ===== سعر الصرف: معاينة تلقائية بالليرة للأدمن أثناء التعديل =====
+async function loadExchangeRate() {
+    try {
+        const res = await fetch('https://api.tasswek.com/api/exchange-rate', {
+            headers: { Accept: 'application/json' }
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        currentExchangeRate = Number(data.rate) || null;
+    } catch (err) {
+        console.error('Failed to load exchange rate:', err);
+        currentExchangeRate = null;
+    } finally {
+        updateCurrencyHint();
+    }
+}
+
+function updateCurrencyHint() {
+    const priceInput = document.getElementById('price');
+    const currencySelect = document.getElementById('currency');
+    const hint = document.getElementById('currencyHint');
+    if (!priceInput || !currencySelect || !hint) return;
+
+    const value = parseFloat(priceInput.value);
+    hint.classList.remove('show-conversion');
+
+    if (currencySelect.value === 'USD') {
+        if (!isNaN(value) && value > 0 && currentExchangeRate) {
+            const syp = (value * currentExchangeRate).toLocaleString('ar-SY', {
+                maximumFractionDigits: 0
+            });
+            hint.textContent = `سيظهر للزبون تلقائياً بما يعادل ${syp} ل.س (حسب سعر الصرف الحالي)`;
+            hint.classList.add('show-conversion');
+        } else {
+            hint.textContent = 'سيتم تحويل هذا السعر تلقائياً إلى الليرة السورية عند عرضه للزبون';
+        }
+    } else {
+        hint.textContent = 'السعر سيُعرض للزبون بالليرة السورية كما هو مُدخل';
+    }
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
     
     populateCategories();
+    loadExchangeRate();
+
+    const priceInput = document.getElementById('price');
+    const currencySelect = document.getElementById('currency');
+    if (priceInput) priceInput.addEventListener('input', updateCurrencyHint);
+    if (currencySelect) currencySelect.addEventListener('change', updateCurrencyHint);
 
     
     const urlParams = new URLSearchParams(window.location.search);
@@ -112,6 +158,10 @@ async function enableEditMode(id) {
 
         const priceInput = document.getElementById('price');
         if (priceInput) priceInput.value = product.price;
+
+        const currencySelect = document.getElementById('currency');
+        if (currencySelect) currencySelect.value = product.currency || 'SYP';
+        updateCurrencyHint();
 
         const descInput = document.getElementById('description');
         if (descInput) descInput.value = product.description;

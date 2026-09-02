@@ -6,13 +6,14 @@
    ========================================================================== */
 
 :root {
-    --fab-bg: #FFC312;
-    --fab-bg-hover: #e6af0a;
-    --fab-icon: #1b232b;
-    --fab-badge-bg: #ef4444;
+    --fab-bg: #FF9700;
+    --fab-bg-hover: #FFAA2B;
+    --fab-icon: #00093F;
+    --fab-badge-bg: #EF4444;
     --fab-badge-text: #ffffff;
     --fab-size: 58px;
     --fab-size-mobile: 52px;
+    --fab-border: rgba(0, 9, 63, 0.92);
 }
 
 .cart-fab {
@@ -20,7 +21,7 @@
        On this RTL storefront, "inline-end" resolves to the LEFT edge,
        keeping the FAB clear of the bottom-right toast notifications used
        on the home/product/cart pages. Flip to `right` for an LTR build. */
-    position: fixed;
+    position: fixed !important;
     inset-block-end: 24px;
     inset-inline-start: 20px;
 
@@ -28,19 +29,26 @@
     height: var(--fab-size);
     border-radius: 50%;
 
-    display: flex;
+    display: flex !important;
     align-items: center;
     justify-content: center;
 
-    background: linear-gradient(160deg, var(--fab-bg) 0%, var(--fab-bg-hover) 100%);
+    background: var(--fab-bg);
     color: var(--fab-icon);
     font-size: 1.4rem;
     text-decoration: none;
     cursor: pointer;
 
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28), 0 2px 6px rgba(0, 0, 0, 0.15);
-    border: none;
-    z-index: 950; /* above page content, below header dropdowns/modals */
+    border: 3px solid var(--fab-border);
+    box-shadow: 0 0 0 1px rgba(255, 151, 0, 0.16), 0 10px 22px rgba(0, 9, 63, 0.22);
+    z-index: 9500; /* deliberately high — must win over any page-level fixed
+                       overlay (toast stacks, sticky bars, etc.) added later */
+
+    /* Visible by default — NOT dependent on the .is-visible entrance class.
+       is-visible only adds the little "pop in" animation; if that class
+       is ever delayed or fails to attach, the button is still on screen. */
+    opacity: 1;
+    transform: translateY(0) scale(1);
 
     transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275),
                 box-shadow 0.25s ease,
@@ -54,9 +62,9 @@
 
 /* Hover / active interaction states */
 .cart-fab:hover {
+    background: var(--fab-bg-hover);
     transform: translateY(-4px) scale(1.05);
-    box-shadow: 0 16px 30px rgba(0, 0, 0, 0.32), 0 4px 10px rgba(0, 0, 0, 0.18);
-    background: linear-gradient(160deg, var(--fab-bg-hover) 0%, var(--fab-bg) 100%);
+    box-shadow: 0 0 0 1px rgba(255, 151, 0, 0.22), 0 16px 32px rgba(0, 0, 0, 0.32);
 }
 
 .cart-fab:active {
@@ -66,7 +74,7 @@
 
 .cart-fab:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(255, 195, 18, 0.5), 0 10px 24px rgba(0, 0, 0, 0.28);
+    box-shadow: 0 0 0 3px rgba(0, 9, 63, 0.35), 0 10px 24px rgba(0, 0, 0, 0.28);
 }
 
 /* Entrance animation so the FAB doesn't just "pop" on load */
@@ -155,4 +163,4 @@
    but nudge it up if a page adds a bottom nav/tab bar of its own. */
 body.has-bottom-nav .cart-fab {
     inset-block-end: 84px;
-}   
+}

@@ -442,6 +442,35 @@ label.required::after {
     display: none !important;
 }
 
+/* ===== Price + Currency inline group ===== */
+.price-with-currency {
+    display: flex;
+    align-items: stretch;
+    gap: 0.5rem;
+}
+
+.price-with-currency .form-input {
+    flex: 1;
+}
+
+.price-with-currency .currency-select {
+    flex: 0 0 110px;
+    width: 110px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.field-hint {
+    margin: 0.4rem 0 0;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+}
+
+.field-hint.show-conversion {
+    color: var(--primary);
+    font-weight: 600;
+}
+
 /* ===== Select + inline action button (category "+") ===== */
 .select-with-action {
     display: flex;

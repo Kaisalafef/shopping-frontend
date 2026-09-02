@@ -29,6 +29,8 @@ document.addEventListener("DOMContentLoaded", () => {
         logoLink.href = (role === 'admin') ? "/Home/admin_dashboard.html" : "/Home/client_dashboard.html";
     }
     
+    const targetDashboard = (role === 'admin') ? "/Home/admin_dashboard.html" : "/Home/client_dashboard.html";
+
     const backBtn = document.getElementById("backToCategories");
     if (backBtn) {
         backBtn.href = targetDashboard;
@@ -100,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         if (!products || products.length === 0) {
             searchResults.innerHTML = `
-                <div class="search-item" style="justify-content:center; color:#999; animation: fadeInUp 0.3s forwards">
+                <div class="search-item" style="justify-content:center; color:#8F96B5; animation: fadeInUp 0.3s forwards">
                     لا توجد نتائج
                 </div>`;
         } else {

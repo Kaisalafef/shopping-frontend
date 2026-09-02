@@ -1,19 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
 
 :root {
-    --pw-primary-color: #1e272e;     /* لون الفوتر الداكن الجديد للزر */
-    --pw-primary-hover: #2d3436;     /* لون الـ Hover عند تمرير الماوس */
+    --pw-primary-color: #00093f;      /* navy — selected states, quantity controls */
+    --pw-primary-hover: #101757;
+    --pw-cta: #ff9700;                /* brand orange — the "Add to cart" primary CTA */
+    --pw-cta-hover: #e68600;
     --pw-bg: #ffffff;
     --pw-text: #111827;
     --pw-muted: #6b7280;
     --pw-border: #e5e7eb;
     --pw-radius: 16px;
     --pw-gap: 16px;
-    --pw-accent: #FFC312;            /* لون الذهب المعتمد في الهيدر والفوتر للنجمات */
+    --pw-accent: #ff9700;             /* was an off-brand gold (#FFC312) — aligned to the brand orange for stars/ratings */
+    --page-bg: #F6F7FB;               /* clean light neutral page, not brand navy */
 }
 body {
     font-family: 'Cairo', sans-serif;
-    background: #f3f4f6;
+    background: var(--page-bg);
     margin: 0;
     padding: 0;
     color: var(--pw-text);
@@ -39,7 +42,7 @@ body {
     background: var(--pw-bg);
     border-radius: var(--pw-radius);
     overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 6px 24px rgba(17, 24, 39, 0.08);
     border: 1px solid var(--pw-border);
 }
 
@@ -228,15 +231,23 @@ body {
 .pw__add-btn {
     width: 100%;
     padding: 16px;
-    background: var(--pw-primary-color);
-    color: #fff;
+    background: var(--pw-cta);
+    color: var(--pw-primary-color);
     border: none;
     border-radius: 12px;
     font-size: 1.1rem;
     font-weight: 700;
     font-family: inherit;
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2);
+    box-shadow: 0 4px 15px rgba(255, 151, 0, 0.3);
+    transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.pw__add-btn:hover {
+    background: var(--pw-cta-hover);
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(230, 134, 0, 0.35);
 }
 
 /* =========================================
@@ -266,6 +277,7 @@ body {
     padding: 20px;
     border-radius: var(--pw-radius);
     border: 1px solid var(--pw-border);
+    box-shadow: 0 4px 16px rgba(17, 24, 39, 0.05);
 }
 
 .form-group label {
@@ -380,8 +392,8 @@ body {
 .toast.success i { color: #2ecc71; }
 .toast.error { border-right: 6px solid #e74c3c; }
 .toast.error i { color: #e74c3c; }
-.toast.warning { border-right: 6px solid #f1c40f; }
-.toast.warning i { color: #f1c40f; }
+.toast.warning { border-right: 6px solid var(--pw-accent); }
+.toast.warning i { color: var(--pw-accent); }
 
 .toast::after {
     content: '';

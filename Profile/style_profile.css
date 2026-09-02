@@ -1,6 +1,23 @@
+:root {
+    /* Brand tokens — matches style_home.css so Profile stays visually
+       consistent with the rest of the app (dark navy + brand orange). */
+    --dark-blue: #00093f;
+    --dark-blue-hover: #101757;
+    --accent-gold: #ff9700;
+    --accent-hover: #e68600;
+    --bg-body: #F6F7FB;
+    --white: #ffffff;
+}
+* {
+    box-sizing: border-box;
+}
 body {
-    background-color: #f4f7f6;
-    color: #232f3e;
+    font-family: 'Cairo', sans-serif;
+    background: var(--page-bg);
+    margin: 0;
+    padding: 0;
+    color: var(--pw-text);
+    direction: rtl;
 }
 
 .profile-container {
@@ -26,13 +43,13 @@ body {
     width: 100px;
     height: 100px;
     border-radius: 50%;
-    border: 3px solid #f0c14b;
+    border: 3px solid var(--accent-gold);
     margin-bottom: 10px;
 }
 
 .role-badge {
-    background: #232f3e;
-    color: #f0c14b;
+    background: var(--dark-blue);
+    color: var(--accent-gold);
     padding: 4px 12px;
     border-radius: 20px;
     font-size: 0.8rem;
@@ -73,9 +90,13 @@ body {
 }
 
 .btn-primary {
-    background: #f0c14b;
-    color: #232f3e;
+    background: var(--accent-gold);
+    color: var(--dark-blue);
     font-weight: bold;
+}
+
+.btn-primary:hover {
+    background: var(--accent-hover);
 }
 
 .btn-secondary {
@@ -84,8 +105,12 @@ body {
 }
 
 .btn-cart {
-    background: #232f3e;
+    background: var(--dark-blue);
     color: #fff;
+}
+
+.btn-cart:hover {
+    background: var(--dark-blue-hover);
 }
 
 
@@ -101,7 +126,7 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
-    border-bottom: 2px solid #f4f7f6;
+    border-bottom: 2px solid var(--bg-body);
     padding-bottom: 10px;
 }
 
@@ -245,11 +270,11 @@ body {
 
 
 .toast.warning {
-    border-right: 6px solid #f1c40f;
+    border-right: 6px solid var(--accent-gold);
 }
 
 .toast.warning i {
-    color: #f1c40f;
+    color: var(--accent-gold);
 }
 
 
@@ -431,7 +456,7 @@ body {
 }
 
 .modal-header {
-    background: #232f3e;
+    background: var(--dark-blue);
     color: #fff;
     padding: 15px;
     display: flex;

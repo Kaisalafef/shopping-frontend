@@ -329,13 +329,13 @@ document.addEventListener("DOMContentLoaded", () => {
         if (order.order_item && order.order_item.length > 0) {
             order.order_item.forEach(item => {
                 const prodName = item.product ? item.product.name : "منتج محذوف";
-                const prodImg = item.product ? item.product.image_url : "/images/logo.webp";
+                const prodImg = item.product ? item.product.image_url : "/images/looogo.png";
                 const prodColor = item.color || "-";
                 const prodSize = item.size || "-";
 
                 itemsContainer.innerHTML += `
                     <div class="order-item-card">
-                        <img src="${prodImg}" alt="${prodName}" class="item-img" onerror="this.src='/images/logo.webp'">
+                        <img src="${prodImg}" alt="${prodName}" class="item-img" onerror="this.src='/images/looogo.png'">
                         <div class="item-details">
                             <h5>${prodName}</h5>
                             <div class="item-meta">

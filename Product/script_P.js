@@ -122,6 +122,14 @@ function calcDiscountedPrice(price, offer) {
 }
 
 
+// يبني نص السعر بالشكل الصحيح حسب العملة: "$100.00" أو "13,158 SYP"
+function formatMoney(value, currency) {
+  if (currency === "USD") {
+    return `$${Number(value).toFixed(2)}`;
+  }
+  return `${new Intl.NumberFormat("en-US").format(Math.round(value))} SYP`;
+}
+
 function renderProduct(product) {
   console.log("PRODUCT DATA 👉", product);
 
@@ -129,20 +137,35 @@ function renderProduct(product) {
   descEl.textContent = product.description;
   imageEl.src = product.image_url;
 
-  
-  const price = Number(product.price);
+  // العملة التي أدخل بها الأدمن سعر هذا المنتج (افتراضياً SYP للمنتجات القديمة)
+  const currency = product.currency || "SYP";
+  const isUsd = currency === "USD";
+  const otherCurrency = isUsd ? "SYP" : "USD";
+
+  const rawPrice = Number(product.price); // بنفس عملة "currency" تماماً كما أُدخل
   const discount = Number(product.discount_percentage || 0);
 
+  // السعر المحوّل للعملة الأخرى (تقريبي، حسب آخر سعر صرف)
+  const convert = (val) => {
+    if (!EXCHANGE_RATE) return null;
+    return isUsd ? val * EXCHANGE_RATE : val / EXCHANGE_RATE;
+  };
+
   if (discount > 0) {
-    const finalPrice = Math.round(price - price * (discount / 100));
+    const finalPrice = rawPrice - rawPrice * (discount / 100);
+    const convertedFinal = convert(finalPrice);
     priceEl.innerHTML = `
-      <span class="old-price">${price} SYP</span>
-      <span class="new-price">${finalPrice} SYP</span>
+      <span class="old-price">${formatMoney(rawPrice, currency)}</span>
+      <span class="new-price">${formatMoney(finalPrice, currency)}</span>
       <span class="discount-badge">-${discount}%</span>
-      ${usdLabel(finalPrice)}
+      ${convertedFinal !== null ? `<span class="usd-price">(~${formatMoney(convertedFinal, otherCurrency)})</span>` : ""}
     `;
   } else {
-    priceEl.innerHTML = `<span class="new-price">${price} SYP</span> ${usdLabel(price)}`;
+    const convertedRaw = convert(rawPrice);
+    priceEl.innerHTML = `
+      <span class="new-price">${formatMoney(rawPrice, currency)}</span>
+      ${convertedRaw !== null ? `<span class="usd-price">(~${formatMoney(convertedRaw, otherCurrency)})</span>` : ""}
+    `;
   }
 
   

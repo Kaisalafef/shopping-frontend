@@ -40,11 +40,53 @@ const getAuthHeaders = () => ({
 
   const state = {
     colors: [], sizes: [], colorId: 0, sizeId: 0, isEdit: false, productId: null,
+    exchangeRate: null,
   };
+
+  // ===== سعر الصرف: يُجلب مرة واحدة لعرض معاينة تلقائية بالليرة للأدمن =====
+  async function loadExchangeRate() {
+    try {
+      const res = await fetch(`${API_BASE}/exchange-rate`, {
+        headers: { Accept: "application/json" },
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      state.exchangeRate = Number(data.rate) || null;
+    } catch (err) {
+      console.error("Failed to load exchange rate:", err);
+      state.exchangeRate = null;
+    } finally {
+      updateCurrencyHint();
+    }
+  }
+
+  // ===== تحديث نص المعاينة أسفل حقل السعر =====
+  function updateCurrencyHint() {
+    if (!els.currencyHint || !els.currency || !els.price) return;
+
+    const value = parseFloat(els.price.value);
+    els.currencyHint.classList.remove("show-conversion");
+
+    if (els.currency.value === "USD") {
+      if (!isNaN(value) && value > 0 && state.exchangeRate) {
+        const syp = (value * state.exchangeRate).toLocaleString("ar-SY", {
+          maximumFractionDigits: 0,
+        });
+        els.currencyHint.textContent = `سيظهر للزبون تلقائياً بما يعادل ${syp} ل.س (حسب سعر الصرف الحالي)`;
+        els.currencyHint.classList.add("show-conversion");
+      } else {
+        els.currencyHint.textContent = "سيتم تحويل هذا السعر تلقائياً إلى الليرة السورية عند عرضه للزبون";
+      }
+    } else {
+      els.currencyHint.textContent = "السعر سيُعرض للزبون بالليرة السورية كما هو مُدخل";
+    }
+  }
 
   const els = {
     title: document.getElementById("title"),
     price: document.getElementById("price"),
+    currency: document.getElementById("currency"),
+    currencyHint: document.getElementById("currencyHint"),
     description: document.getElementById("description"),
     category: document.getElementById("category"),
     brand: document.getElementById("brand"),
@@ -309,6 +351,7 @@ const getAuthHeaders = () => ({
     fd.append("price", els.price.value);
     fd.append(CATEGORY_FIELD_NAME, els.category.value);
     fd.append("brand", els.brand.value || "");
+    fd.append("currency", els.currency.value || "SYP");
 
     state.sizes.forEach((s, i) => { if (s.value) fd.append(`sizes[${i}][size]`, s.value); });
     state.colors.forEach((c, i) => {
@@ -350,6 +393,9 @@ const getAuthHeaders = () => ({
   els.addSizeBtn.onclick = () => addSizeRow();
   els.saveBtn.onclick = saveProduct;
 
+  if (els.price) els.price.addEventListener("input", updateCurrencyHint);
+  if (els.currency) els.currency.addEventListener("change", updateCurrencyHint);
+
   if (els.addCategoryBtn) els.addCategoryBtn.onclick = openCategoryModal;
   if (els.closeCategoryModalBtn) els.closeCategoryModalBtn.onclick = closeCategoryModal;
   if (els.cancelCategoryBtn) els.cancelCategoryBtn.onclick = closeCategoryModal;
@@ -363,6 +409,7 @@ const getAuthHeaders = () => ({
   // استدعاء الدوال عند تحميل الصفحة
   renderIcons(); 
   loadCategories();
+  loadExchangeRate();
   addColorRow();
   addSizeRow();
 })();

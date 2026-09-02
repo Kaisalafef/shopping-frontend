@@ -1,15 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Cairo:wght@400;600;700;800&display=swap');
 
 :root {
-    --primary-color: #6c5ce7;
-    --primary-hover: #5649c0;
-    --bg-gradient: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-    --text-color: #2d3436;
-    --text-muted: #636e72;
+    --primary-color: #00093f;      /* brand navy — was off-brand purple #6c5ce7 */
+    --primary-hover: #101757;
+    --accent-gold: #ff9700;        /* brand orange — the CTA fill, matches the rest of the site */
+    --accent-hover: #e68600;
+    --bg-gradient:linear-gradient(29deg, #f4ffff 0%, #f6f0db 14%, #f7e9ca 21%, #f7e5c1 24%, #f8deaf 31%, #f8daa6 35%, #f9d190 43%, #fac97b 52%, #fbc46f 56%, #fcba56 66%, #fcb346 72%, #fdac34 80%, #fe981b 89%, #ff8200 100%);
+
+
+    --text-color: #111827;
+    --text-muted: #6b7280;
     --white: #ffffff;
-    --error: #d63031;
-    --success: #00b894;
-    --warning: #f1c40f;
+    --error: #e74c3c;              /* matches --danger/--price-red used sitewide */
+    --success: #27ae60;            /* matches --success used sitewide */
+    --warning: #ff9700;            /* matches the brand accent used for warning toasts sitewide */
 }
 
 * {
@@ -123,7 +127,7 @@ input {
 
 input:focus {
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.1);
+    box-shadow: 0 0 0 4px rgba(0, 9, 63, 0.1);
 }
 
 
@@ -181,7 +185,7 @@ input:focus {
 
 .input-wrapper input:focus, .password-container input:focus {
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.1);
+    box-shadow: 0 0 0 4px rgba(0, 9, 63, 0.1);
 }
 
 .strength-meter {
@@ -203,22 +207,21 @@ input:focus {
 .btn-primary {
     width: 100%;
     padding: 14px;
-    background: var(--primary-color);
-    color: white;
+background: linear-gradient(29deg, #fe981bc4 14%, #ff8200 100%);
+    color: var(--primary-color);
     border: none;
     border-radius: 12px;
     font-weight: 700;
     font-size: 1rem;
     font-family: 'Cairo', sans-serif;
     cursor: pointer;
-    box-shadow: 0 5px 15px rgba(108, 92, 231, 0.3);
+    box-shadow: 0 5px 15px rgba(255, 151, 0, 0.3);
     transition: all 0.25s ease;
 }
 
 .btn-primary:hover {
-    background: var(--primary-hover);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(108, 92, 231, 0.4);
+background: linear-gradient(29deg, #fe981bc4 14%, #f78102a8 100%);    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 151, 0, 0.4);
 }
 
 .btn-primary:active {

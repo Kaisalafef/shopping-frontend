@@ -1,21 +1,30 @@
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap');
 
 :root {
-    --bg-body: #f8f9fa;       
+    /* Main content lives on a clean white/near-white canvas — the header
+       (orange) and footer (navy) provide the brand bookends, this layer
+       stays light, spacious and easy to read. */
+    --bg-body: #F6F7FB;           /* very light neutral page backdrop */
+    --bg-surface: #FFFFFF;        /* primary surface for cards/sections */
     --white: #ffffff;
-    --dark-blue: #232f3e;     
-    --light-blue: #405670d8;   
-    --accent-gold: #f0c14b;   
-    --accent-hover: #ddb347;
+    --dark-blue: #00093f;
+    --dark-blue-hover: #101757;
+    --light-blue: #1c2a5ed8;
+    --accent-gold: #ff9700;
+    --accent-hover: #e68600;      /* deeper, more refined orange for hover on light bg */
+    --accent-soft: rgba(255, 151, 0, 0.10);
     --text-main: #111827;
+    --text-light: #00093f;        /* headings on the light page are dark navy now */
     --text-gray: #6b7280;
     --price-red: #e74c3c;
     --border-color: #e5e7eb;
     --success: #27ae60;
     --danger: #ef4444;
-    --blue-btn: #2563eb;
+    --blue-btn: #ff9700; /* was an unrelated blue — repointed to the brand accent so "edit" actions read as part of the same system */
     --radius-lg: 16px;
     --radius-md: 12px;
+    --shadow-card: 0 4px 16px rgba(17, 24, 39, 0.06);
+    --shadow-card-hover: 0 10px 28px rgba(17, 24, 39, 0.10);
 }
 
 body {
@@ -47,7 +56,7 @@ body {
 .section-header h2 {
     font-size: 1.4rem;
     font-weight: 700;
-    color: var(--text-main);
+    color: var(--text-light);
     margin: 0;
     position: relative;
     padding-bottom: 8px;
@@ -85,6 +94,15 @@ body {
 /* =========================================
    الأقسام (التصنيفات)
 ========================================= */
+.pdf-card-wrapper {
+    position: relative;
+    min-width: 80px;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .pdf-card {
     min-width: 80px;
     text-align: center;
@@ -96,7 +114,7 @@ body {
 }
 
 .pdf-card-inner {
-    background: var(--white);
+    background: var(--bg-surface);
     width: 65px;
     height: 65px;
     border-radius: 50%;
@@ -104,7 +122,7 @@ body {
     align-items: center;
     justify-content: center;
     margin-bottom: 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+    box-shadow: var(--shadow-card);
     transition: all 0.3s ease;
     border: 1px solid var(--border-color);
 }
@@ -128,35 +146,118 @@ body {
 }
 
 .pdf-card-title {
-    color: var(--text-main);
+    color: var(--text-light);
     font-size: 0.85rem;
     font-weight: 600;
 }
+
+/* أزرار تعديل/حذف القسم (تظهر فوق أعلى دائرة الأيقونة، للأدمن فقط) */
+.category-admin-actions {
+    position: absolute;
+    top: -6px;
+    right: 4px;
+    left: 4px;
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+    z-index: 3;
+}
+
+.cat-action-btn {
+    pointer-events: auto;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    cursor: pointer;
+    color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    transition: transform 0.15s ease;
+}
+
+.cat-action-btn:hover {
+    transform: scale(1.1);
+}
+
+.cat-edit-btn { background: var(--blue-btn); }
+.cat-delete-btn { background: var(--danger); }
 
 /* =========================================
    الإعلانات (Banners)
 ========================================= */
 .ad-banner {
     position: relative;
-    min-width: 85vw; /* عرض ممتاز للموبايل */
-    max-width: 600px;
-    height: 180px;
+    min-width: 78vw; /* أصغر قليلاً من السابق مع بقاء وضوح الإعلان على الموبايل */
+    max-width: 520px;
+    height: 170px;
     border-radius: var(--radius-lg);
     overflow: hidden;
     scroll-snap-align: center;
     background-size: cover;
     background-position: center;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ad-banner:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(0, 9, 63, 0.28);
+}
+
+.ad-banner:active {
+    transform: translateY(-1px) scale(0.99);
 }
 
 @media(min-width: 768px){
-    .ad-banner { min-width: 60%; }
+    .ad-banner { min-width: 48%; }
+}
+
+/* =========================================
+   نقاط تدل على عدد الإعلانات، تتزامن مع الإزاحة الأفقية
+========================================= */
+.ads-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin: 2px 0 18px;
+}
+
+.ads-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    border: none;
+    padding: 0;
+    background: rgba(0, 9, 63, 0.18);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.ads-dot:hover {
+    background: rgba(255, 151, 0, 0.55);
+}
+
+.ads-dot.active {
+    width: 24px;
+    background: var(--accent-gold);
+    box-shadow: 0 2px 8px rgba(255, 151, 0, 0.45);
+}
+
+.ads-dot:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 151, 0, 0.3);
 }
 
 .ad-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to left, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.1) 100%);
+    background: linear-gradient(to left, rgba(0,9,63,0.85) 0%, rgba(0,9,63,0.15) 100%);
 }
 
 .ad-content {
@@ -236,8 +337,8 @@ body {
 .toast.error { border-right: 6px solid #e74c3c; }
 .toast.error i { color: #e74c3c; }
 
-.toast.warning { border-right: 6px solid #f1c40f; }
-.toast.warning i { color: #f1c40f; }
+.toast.warning { border-right: 6px solid var(--accent-gold); }
+.toast.warning i { color: var(--accent-gold); }
 
 .toast::after {
     content: '';
@@ -288,6 +389,10 @@ body {
     background: transparent;
 }
 
+.offers-title {
+    color: var(--text-light);
+}
+
 .offers-inner-grid {
     display: flex;
     gap: 15px;
@@ -307,7 +412,7 @@ body {
     flex-shrink: 0;
     scroll-snap-align: start;
     position: relative;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     border: 1px solid var(--border-color);
     padding: 10px;
     display: flex;
@@ -381,6 +486,12 @@ body {
     font-size: 0.85rem;
 }
 
+.usd-price {
+    color: var(--text-gray);
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
 /* أزرار الأدمن */
 .admin-actions {
     display: flex;
@@ -408,8 +519,8 @@ body {
 
 /* زر تعديل سعر الصرف (Admin) */
 .btn-edit-rate {
-    background: var(--dark-blue);
-    color: var(--white);
+    background: var(--accent-gold);
+    color: var(--dark-blue);
     border: none;
     padding: 10px 18px;
     border-radius: 10px;
@@ -423,18 +534,18 @@ body {
     transition: background 0.2s ease;
 }
 
-.btn-edit-rate i { color: var(--accent-gold); }
+.btn-edit-rate i { color: var(--dark-blue); }
 
-.btn-edit-rate:hover { background: #1a2431; }
+.btn-edit-rate:hover { background: var(--accent-hover); }
 
-/* ===== نافذة تعديل سعر الصرف (Modal) ===== */
+/* ===== نافذة تعديل سعر الصرف / تعديل القسم (Modal) ===== */
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(15, 23, 42, 0.6);
+    background: rgba(0, 9, 63, 0.75);
     backdrop-filter: blur(4px);
     display: none;
     justify-content: center;
@@ -453,7 +564,7 @@ body {
     width: 100%;
     max-width: 420px;
     position: relative;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
 }
 
 .close-modal-btn {
@@ -481,6 +592,10 @@ body {
 .modal-header i { font-size: 1.4rem; color: var(--accent-gold); }
 .modal-header h3 { margin: 0; font-size: 1.15rem; }
 
+.form-group {
+    margin-bottom: 1.1rem;
+}
+
 .form-group label {
     display: block;
     font-weight: 700;
@@ -498,10 +613,12 @@ body {
     font-size: 0.95rem;
     box-sizing: border-box;
     outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .form-group input:focus {
-    border-color: var(--dark-blue);
+    border-color: var(--accent-gold);
+    box-shadow: 0 0 0 3px rgba(255, 151, 0, 0.15);
 }
 
 .modal-actions {
@@ -519,7 +636,10 @@ body {
     border-radius: var(--radius-md);
     font-weight: 700;
     cursor: pointer;
+    transition: background 0.2s ease;
 }
+
+.btn-cancel:hover { background: #e2e8f0; }
 
 .btn-confirm-order {
     background: var(--dark-blue);
@@ -532,4 +652,236 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
+    transition: background 0.25s ease, transform 0.25s ease;
+}
+
+.btn-confirm-order:hover {
+    background: var(--dark-blue-hover);
+    transform: translateY(-2px);
+}
+
+/* ===== شبكة اختيار أيقونة القسم داخل نافذة التعديل ===== */
+.icons-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 6px;
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: #f9fafb;
+}
+
+.icon-option {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: var(--dark-blue);
+    transition: all 0.2s ease-in-out;
+}
+
+.icon-option:hover {
+    border-color: var(--blue-btn);
+    color: var(--blue-btn);
+    transform: translateY(-2px);
+}
+
+.icon-option.active {
+    background: var(--blue-btn);
+    color: white;
+    border-color: var(--blue-btn);
+    transform: translateY(0);
+}
+
+/* ==========================================================================
+   REFINEMENT LAYER — light-theme depth, button hierarchy, empty/error states
+   The base rules above already carry the light-page tokens; this layer adds
+   the finishing depth/hierarchy the brief calls for without touching any
+   selector used by the HTML/JS (no markup changes required).
+   ========================================================================== */
+
+.dashboard-container {
+    background: var(--bg-body);
+}
+
+.section-header h2 {
+    letter-spacing: 0.2px;
+}
+
+/* Category icon circles: crisp on white, orange on hover/active (unchanged
+   behaviour, just tuned contrast) */
+.pdf-card:hover .pdf-card-inner,
+.pdf-card:active .pdf-card-inner {
+    box-shadow: 0 10px 22px rgba(255, 151, 0, 0.28);
+}
+
+/* Ads + daily offers surfaces: soft neutral panel instead of a dark slab,
+   so the orange/navy accents inside them still pop */
+.offers-gold-box {
+   
+    border-radius: var(--radius-lg);
+    padding: 14px 12px;
+}
+
+.offer-white-card {
+    box-shadow: var(--shadow-card);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.offer-white-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-card-hover);
+    border-color: rgba(255, 151, 0, 0.35);
+}
+
+/* ================= BUTTON HIERARCHY =================
+   Primary CTA   -> Orange fill, navy text
+   Secondary     -> Navy fill, white text
+   Outline       -> Transparent, navy border/text
+   Disabled      -> Muted neutral, no interaction affordance
+   ======================================================= */
+.btn-edit-rate {
+      padding: 1px 1px;
+    width: 100px;
+    height: 50px;
+    font-family: inherit;
+    font-size: 0.75rem;
+    font-weight: 700;
+    background: var(--accent-gold);
+    color: var(--dark-blue);
+    box-shadow: 0 4px 14px rgba(255, 151, 0, 0.28);
+}
+
+.btn-edit-rate:hover {
+    background: var(--accent-hover);
+    box-shadow: 0 6px 18px rgba(230, 134, 0, 0.32);
+}
+
+.btn-confirm-order {
+    background: var(--dark-blue);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(0, 9, 63, 0.22);
+}
+
+.btn-confirm-order:hover {
+    background: var(--dark-blue-hover);
+    box-shadow: 0 8px 20px rgba(0, 9, 63, 0.28);
+}
+
+.btn-cancel {
+    background: #F1F5F9;
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+}
+
+.btn-cancel:hover {
+    background: #E2E8F0;
+    border-color: #CBD5E1;
+}
+
+/* A reusable outline/disabled pattern for any future buttons that adopt
+   these utility classes — additive only, nothing above is renamed */
+.btn-outline {
+    background: transparent;
+    color: var(--dark-blue);
+    border: 1.5px solid var(--dark-blue);
+}
+
+.btn-outline:hover {
+    background: rgba(0, 9, 63, 0.06);
+}
+
+button:disabled,
+.btn-disabled {
+    background: #E5E7EB !important;
+    color: #9CA3AF !important;
+    border-color: #E5E7EB !important;
+    box-shadow: none !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+}
+
+/* Modal stays a crisp white card, floating on a navy scrim for focus */
+.modal-content {
+    box-shadow: 0 24px 60px rgba(0, 9, 63, 0.22);
+}
+
+.icon-option:hover,
+.icon-option.active {
+    box-shadow: 0 6px 16px rgba(255, 151, 0, 0.22);
+}
+
+/* Toast notifications: crisp white card, colored left border communicates
+   state without relying on color alone (icon + text carry the meaning too) */
+.toast {
+    box-shadow: 0 10px 26px rgba(17, 24, 39, 0.14);
+}
+
+@media (max-width: 768px) {
+    .dashboard-container { padding: 20px 12px 40px; }
+    .offers-gold-box { padding: 10px; }
+}
+
+/* ==========================================================================
+   حوار تفاصيل الإعلان (Ad Details Dialog)
+   يعيد استخدام نفس منظومة .modal-overlay / .modal-content القائمة، فقط
+   يضيف تخطيطاً يلائم صورة كبيرة + عنوان + وصف + زر تصفح.
+   ========================================================================== */
+.ad-modal-content {
+    max-width: 480px;
+    padding: 0;
+    overflow: hidden;
+}
+
+.ad-modal-content .close-modal-btn {
+    top: 14px;
+    left: 14px;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 2px 10px rgba(0, 9, 63, 0.18);
+    z-index: 2;
+}
+
+.ad-modal-image {
+    width: 100%;
+    height: 220px;
+    background-size: cover;
+    background-position: center;
+    background-color: var(--bg-body);
+}
+
+.ad-modal-body {
+    padding: 22px 24px 26px;
+}
+
+.ad-modal-body h3 {
+    margin: 0 0 10px;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--dark-blue);
+}
+
+.ad-modal-body p {
+    margin: 0 0 22px;
+    color: var(--text-gray);
+    line-height: 1.8;
+    font-size: 0.95rem;
+}
+
+.ad-modal-body .modal-actions {
+    margin-top: 0;
+}
+
+@media (max-width: 768px) {
+    .ad-modal-image { height: 180px; }
+    .ad-modal-body { padding: 18px 18px 20px; }
+    .ad-modal-body h3 { font-size: 1.1rem; }
 }

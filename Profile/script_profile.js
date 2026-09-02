@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
             adminSection.style.display = "block";
         } else {
             roleBadge.textContent = "زبون";
-            roleBadge.style.background = "#232f3e";
+            roleBadge.style.background = "#00093f";
             adminSection.style.display = "none";
             customerSection.style.display = "block";
         }

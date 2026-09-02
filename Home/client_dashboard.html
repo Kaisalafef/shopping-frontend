@@ -25,8 +25,9 @@
             title="الإشعارات"
           >
             <i class="fas fa-bell"></i>
-            <span class="notif-badge" id="notifBadge">0</span>
+            
           </button>
+          <span class="notif-badge" id="notifBadge">0</span>
 
           <div class="notif-dropdown" id="notifDropdown">
             <div class="notif-header">
@@ -119,7 +120,7 @@
           <div id="searchResults" class="search-results-dropdown"></div>
         </div>
         <a href="#" class="logo-link">
-          <img src="/images/logo.webp" class="logo" alt="Logo" />
+          <img src="/images/looogo.png" class="logo" alt="Logo" />
         </a>
       </div>
     </header>
@@ -152,6 +153,7 @@
           class="ads-section horizontal-scroll-wrapper"
           id="adsContainer"
         ></div>
+        <div class="ads-dots" id="adsDots"></div>
 
         <div class="daily-offers-section">
           <h3 class="offers-title">عروض يومية</h3>
@@ -170,7 +172,7 @@
         <div class="footer-row">
           <div class="footer-col footer-about">
             <a href="#" class="footer-logo-link">
-              <img src="/images/logoo.webp" alt="Logo" class="footer-logo" />
+              <img src="/images/looogo.png" alt="Logo" class="footer-logo" />
             </a>
             <p class="footer-desc">
               متجرك الرقمي الأول لتسوق أحدث المنتجات بأفضل الأسعار. نجمع بين
@@ -262,6 +264,28 @@
         </p>
       </div>
     </footer>
+    <!-- Modal تفاصيل الإعلان -->
+    <div id="adDetailsModal" class="modal-overlay">
+      <div class="modal-content ad-modal-content">
+        <button
+          class="close-modal-btn"
+          onclick="closeAdDetailsModal()"
+          type="button"
+          title="إغلاق"
+        >
+          <i class="fas fa-times"></i>
+        </button>
+
+        <div class="ad-modal-image" id="adModalImage"></div>
+
+        <div class="ad-modal-body">
+          <h3 id="adModalTitle"></h3>
+          <p id="adModalDesc"></p>
+          <div class="modal-actions" id="adModalActions"></div>
+        </div>
+      </div>
+    </div>
+
     <div id="exchangeRateModal" class="modal-overlay">
       <div class="modal-content">
         <button

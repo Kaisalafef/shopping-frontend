@@ -95,21 +95,39 @@ document.addEventListener("DOMContentLoaded", () => {
       const result = await response.json();
       const data = result.data || result; 
 
-      allProducts = data.map((item) => ({
-        id: item.id,
-        name: item.name,
-        price: item.price,
-        discount: item.discount_percentage || 0, 
-        finalPrice: item.final_price || item.price, 
-        currency: "SYP",
-        img: item.image_url || item.image || "/images/default.png",
-        category: item.category,
-      }));
+      allProducts = data.map((item) => {
+        // العملة التي أدخل بها الأدمن سعر هذا المنتج (افتراضياً SYP للمنتجات القديمة)
+        const currency = item.currency || "SYP";
+        const rawPrice = Number(item.price); // بنفس عملة "currency" تماماً كما أُدخل
+
+        const discountPercentage = Number(item.discount_percentage || item.activeOffer?.discount_percentage || 0);
+        const discountAmount = item.discount_price ?? item.activeOffer?.discount_price ?? null; // ملاحظة: يُفترض أنه مُدخل بنفس عملة المنتج
+
+        // نطبّق الخصم على السعر بعملته الأصلية أولاً، ثم نحوّل بعد ذلك
+        let finalNative = rawPrice;
+        if (discountPercentage > 0) {
+          finalNative = rawPrice - (rawPrice * discountPercentage / 100);
+        } else if (discountAmount) {
+          finalNative = rawPrice - Number(discountAmount);
+        }
+        finalNative = Math.max(finalNative, 0);
+
+        return {
+          id: item.id,
+          name: item.name,
+          currency,           // "USD" أو "SYP": عملة الإدخال الأصلية (تُعرض كسعر رئيسي)
+          rawPrice,            // السعر الأصلي قبل الخصم، بعملته
+          finalNative,         // السعر بعد الخصم، بنفس عملته الأصلية
+          discount: discountPercentage,
+          img: item.image_url || item.image || "/images/default.png",
+          category: item.category,
+        };
+      });
 
       renderProducts(allProducts);
     } catch (error) {
       console.error(error);
-      container.innerHTML = `<div class="no-results" style="color:red">حدث خطأ أثناء جلب البيانات</div>`;
+      container.innerHTML = `<div class="no-results" style="color:#e74c3c">حدث خطأ أثناء جلب البيانات</div>`;
     }
   }
 
@@ -142,24 +160,38 @@ document.addEventListener("DOMContentLoaded", () => {
   })();
 });
 
-function createProductCard(product, isAdmin) {
-  const priceFormatted = new Intl.NumberFormat("en-US").format(product.price);
-  const finalPriceVal = product.finalPrice ?? product.price;
-  const finalFormatted = new Intl.NumberFormat("en-US").format(finalPriceVal);
+// يبني نص السعر بالشكل الصحيح حسب العملة: "$100.00" أو "13,158 SYP"
+function formatMoney(value, currency) {
+  if (currency === "USD") {
+    return `$${Number(value).toFixed(2)}`;
+  }
+  return `${new Intl.NumberFormat("en-US").format(Math.round(value))} SYP`;
+}
 
-  const usdHtml = EXCHANGE_RATE
-    ? `<span class="usd-price">(~$${(finalPriceVal / EXCHANGE_RATE).toFixed(2)})</span>`
+function createProductCard(product, isAdmin) {
+  const isUsd = product.currency === "USD";
+  const otherCurrency = isUsd ? "SYP" : "USD";
+
+  // السعر المحوّل للعملة الأخرى (تقريبي، حسب آخر سعر صرف)، يُعرض بجانب السعر الأصلي
+  const convert = (val) => {
+    if (!EXCHANGE_RATE) return null;
+    return isUsd ? val * EXCHANGE_RATE : val / EXCHANGE_RATE;
+  };
+
+  const finalConverted = convert(product.finalNative);
+  const convertedHtml = finalConverted !== null
+    ? `<span class="usd-price">(~${formatMoney(finalConverted, otherCurrency)})</span>`
     : "";
 
   let priceHtml = product.discount > 0
     ? `
       <div class="price-container">
-        <span class="new-price">${finalFormatted} SYP</span>
-        <span class="old-price">${priceFormatted} SYP</span>
-        ${usdHtml}
+        <span class="new-price">${formatMoney(product.finalNative, product.currency)}</span>
+        <span class="old-price">${formatMoney(product.rawPrice, product.currency)}</span>
+        ${convertedHtml}
       </div>
     `
-    : `<span class="regular-price">${priceFormatted} SYP</span> ${usdHtml}`;
+    : `<span class="regular-price">${formatMoney(product.finalNative, product.currency)}</span> ${convertedHtml}`;
 
   const discountBadge = product.discount > 0
     ? `<span class="discount-badge">-${product.discount}%</span>`
@@ -186,7 +218,7 @@ function createProductCard(product, isAdmin) {
       <a href="/Product/Product.html?id=${product.id}" class="card-link-wrapper">
         <div class="product-img-wrapper">
           ${discountBadge}
-          <img src="${product.img}" alt="${product.name}" onerror="this.src='/images/logo.webp'">
+          <img src="${product.img}" alt="${product.name}" onerror="this.src='/images/looogo.png'">
         </div>
 
         <div class="product-info">
