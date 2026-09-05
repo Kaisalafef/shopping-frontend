@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>طلباتي</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/Wedgit/style_header.css">
+    <link rel="stylesheet" href="style_MyOrders.css">
+    <link rel="stylesheet" href="/Wedgit/style_footer.css">
+</head>
+<body>
+    <header class="main-header">
+      <div class="header-container">
+        <div class="notif-menu">
+          <button class="icon-btn" id="notifBtn" type="button" title="الإشعارات">
+            <i class="fas fa-bell"></i>
+            
+          </button>
+          <span class="notif-badge" id="notifBadge">0</span>
+          <div class="notif-dropdown" id="notifDropdown">
+            <div class="notif-header">
+              <span>الإشعارات</span>
+              <button id="markAllReadBtn" class="notif-mark-all" type="button">
+                تعليم الكل كمقروء
+              </button>
+            </div>
+            <div class="notif-list" id="notifList">
+              <div class="notif-empty">لا توجد إشعارات حالياً</div>
+            </div>
+          </div>
+        </div>
+        <div class="profile-menu">
+          <button class="icon-btn" id="profileBtn" type="button" title="القائمة الشخصية">
+            <i class="fas fa-user"></i>
+          </button>
+          <ul class="dropdown" id="desktopDropdown">
+            <li><a href="/Profile/Profile.html"><i class="fas fa-user-circle"></i> حسابي</a></li>
+            <li><a href="/Profile/MyOrders.html"><i class="fas fa-box"></i> طلباتي</a></li>
+            <li class="admin-only" style="display: none;"><a href="/ADS/Add_ADS.html"><i class="fas fa-bullhorn"></i> إضافة إعلانات</a></li>
+            <li class="admin-only" style="display: none;"><a href="/Discount/Add_Discount.html"><i class="fas fa-tags"></i> إضافة خصومات</a></li>
+            <li class="admin-only" style="display: none;"><a href="/Add Proudct/add_Proudct.html"><i class="fas fa-user-plus"></i> إضافة منتجات</a></li>
+            <li class="admin-only" style="display: none;"><a href="/Orders/Orders.html"><i class="fas fa-book"></i> سجل الطلبات</a></li>
+            <li id="cart-link"><a href="/Cart/Cart.html"><i class="fas fa-shopping-cart"></i> سلتي</a></li>
+            <li><a href="/Wedgit/About.html"><i class="fas fa-info-circle"></i> حول</a></li>
+            <li class="divider"></li>
+            <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> تسجيل خروج</a></li>
+          </ul>
+        </div>
+        <a href="/Home/client_dashboard.html" class="logo-link">
+          <img src="/images/looogo.png" class="logo" alt="Logo">
+        </a>
+      </div>
+    </header>
+    <div id="toast-box"></div>
+
+    <main class="orders-page-container">
+      <div class="orders-card">
+        <div class="section-header">
+          <h3><i class="fas fa-history"></i> طلباتي</h3>
+          <button class="btn-cart" onclick="window.location.href='/Cart/Cart.html'">
+            <i class="fas fa-shopping-basket"></i> اذهب إلى سلتي
+          </button>
+        </div>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>رقم الطلب</th>
+                <th>التاريخ</th>
+                <th>الإجمالي</th>
+                <th>طريقة الدفع</th>
+                <th>الحالة</th>
+                <th>الإجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="customer-orders-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-row">
+                <div class="footer-col footer-about">
+                    <a href="#" class="footer-logo-link"><img src="/images/looogo.png" alt="Logo" class="footer-logo"></a>
+                    <p class="footer-desc">متجرك الرقمي الأول لتسوق أحدث المنتجات بأفضل الأسعار. نجمع بين الجودة، السرعة، والأمان.</p>
+                </div>
+                <div class="footer-col footer-links">
+                    <h3>روابط هامة</h3>
+                    <ul id="footerLinksList">
+                        <li><a href="/Wedgit/About.html"><i class="fas fa-angle-left"></i> من نحن</a></li>
+                        <li class="client-link" style="display: none;"><a href="/Home/client_dashboard.html"><i class="fas fa-angle-left"></i> الرئيسية</a></li>
+                        <li class="client-link" style="display: none;"><a href="/Profile/Profile.html"><i class="fas fa-angle-left"></i> حسابي</a></li>
+                        <li class="client-link" style="display: none;"><a href="/Profile/MyOrders.html"><i class="fas fa-angle-left"></i> طلباتي</a></li>
+                        <li class="client-link" style="display: none;"><a href="/Cart/Cart.html"><i class="fas fa-angle-left"></i> سلة المشتريات</a></li>
+                        <li class="admin-link" style="display: none;"><a href="/Home/admin_dashboard.html"><i class="fas fa-angle-left"></i> لوحة التحكم</a></li>
+                        <li class="admin-link" style="display: none;"><a href="/ADS/Add_ADS.html"><i class="fas fa-angle-left"></i> إدارة الإعلانات</a></li>
+                        <li class="admin-link" style="display: none;"><a href="/Add Proudct/add_Proudct.html"><i class="fas fa-angle-left"></i> إدارة المنتجات</a></li>
+                        <li class="admin-link" style="display: none;"><a href="/Discount/Add_Discount.html"><i class="fas fa-angle-left"></i> إدارة الخصومات</a></li>
+                        <li class="admin-link" style="display: none;"><a href="/Orders/Orders.html"><i class="fas fa-angle-left"></i> سجل الطلبات </a></li>
+                    </ul>
+                </div>
+                <div class="footer-col footer-contact">
+                    <h3>تواصل معنا</h3>
+                    <div class="social-icons">
+                        <a href="#" class="social-btn facebook" title="فيسبوك" aria-label="فيسبوك"><i class="fab fa-facebook-f" aria-hidden="true"></i></a>
+                        <a href="#" class="social-btn instagram" title="انستغرام" aria-label="انستغرام"><i class="fab fa-instagram" aria-hidden="true"></i></a>
+                        <a href="#" class="social-btn whatsapp" title="واتساب" aria-label="واتساب"><i class="fab fa-whatsapp" aria-hidden="true"></i></a>
+                        <a href="#" class="social-btn twitter" title="تويتر" aria-label="تويتر"><i class="fab fa-x-twitter" aria-hidden="true"></i></a>
+                    </div>
+                    <div class="contact-info">
+                        <p><i class="fas fa-envelope"></i> support@store.com</p>
+                        <p><i class="fas fa-phone"></i> +963 999 999 999</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom"><p>جميع الحقوق محفوظة &copy; <span id="year"></span> لمتجرنا الإلكتروني.</p></div>
+    </footer>
+
+    <!-- Order Detail Modal -->
+    <div id="order-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-order-id">تفاصيل الطلب</h3>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="customer-info-box" id="modal-customer-info"></div>
+                <h4 class="items-title">المنتجات المشتراة:</h4>
+                <div class="order-items-list" id="modal-items-list"></div>
+            </div>
+            <div class="modal-footer">
+                <div class="total-row">
+                    <span>الإجمالي النهائي:</span>
+                    <span id="modal-total-price" class="price-text">0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/Auth/auth_guard.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="/Wedgit/script_footer.js"></script>
+    <script src="/Wedgit/script_header.js"></script>
+    <script src="script_MyOrders.js"></script>
+    <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

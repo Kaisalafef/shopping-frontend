@@ -1,3 +1,5 @@
+﻿:root { color-scheme: light only; }
+
 :root {
     /* Brand tokens — matches style_home.css so Profile stays visually
        consistent with the rest of the app (dark navy + brand orange). */
