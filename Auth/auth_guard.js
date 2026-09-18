@@ -6,14 +6,15 @@
 
   
   const publicPages = [
-    "/Auth/Log_in.html",
+    "/index.html",
+    
     "/Auth/Sign_up.html",
     "/Auth/Verify_otp.html"
   ];
 
   
   if (!token && !publicPages.some(p => path.includes(p))) {
-    window.location.replace("/Auth/Log_in.html");
+    window.location.replace("/index.html");
     return;
   }
 

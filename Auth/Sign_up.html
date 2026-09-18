@@ -17,11 +17,11 @@
         <img class="logo" src="/images/looogo.png" alt="Logo">
         <h2>إنشاء حساب</h2>
         <p class="subtitle">أدخل بياناتك لإنشاء حساب جديد</p>
-        <form id="signupForm">
+        <form id="signupForm" novalidate>
             <div class="input-group">
                 <label>الاسم الكامل</label>
                 <div class="input-wrapper">
-                    <input type="text" id="fullname" placeholder="الاسم الثلاثي">
+                    <input type="text" id="fullname" placeholder="الاسم الثلاثي" autocomplete="name">
                     <i class="fa-solid fa-user input-icon"></i>
                 </div>
                 <small class="error-msg"></small>
@@ -30,7 +30,7 @@
             <div class="input-group">
                 <label>البريد الإلكتروني</label>
                 <div class="input-wrapper">
-                    <input type="email" id="email" placeholder="name@example.com">
+                    <input type="email" id="email" placeholder="name@example.com" autocomplete="email">
                     <i class="fa-solid fa-envelope input-icon"></i>
                 </div>
                 <small class="error-msg"></small>
@@ -38,7 +38,7 @@
             <div class="input-group">
                 <label> رقم الموبايل </label>
                 <div class="input-wrapper">
-                    <input type="tel" id="phone" placeholder="رقم الموبايل">
+                    <input type="tel" id="phone" placeholder="09XXXXXXXX" autocomplete="tel">
                     <i class="fa-solid fa-phone input-icon"></i>
                 </div>
                 <small class="error-msg"></small>
@@ -47,23 +47,25 @@
             <div class="input-group">
                 <label>كلمة المرور</label>
                 <div class="password-container">
-                    <input type="password" id="password" placeholder="أدخل كلمة مرور قوية">
+                    <input type="password" id="password" placeholder="أدخل كلمة مرور قوية" autocomplete="new-password">
                     <i class="fa-solid fa-lock input-icon"></i>
                     <i class="fa-solid fa-eye toggle-password"></i>
                 </div>
-                
+
                 <div class="strength-meter" id="strengthMeter">
                     <div class="strength-bar" id="strengthBar"></div>
                 </div>
+                <small class="strength-text" id="strengthText"></small>
                 <small class="error-msg"></small>
             </div>
             <div class="input-group">
                 <label> تأكيد كلمة السر </label>
                 <div class="password-container">
-                    <input type="password" id="passwordcomf" placeholder="أدخل كلمة مرور مرة اخرى">
+                    <input type="password" id="passwordcomf" placeholder="أدخل كلمة مرور مرة اخرى" autocomplete="new-password">
                     <i class="fa-solid fa-lock input-icon"></i>
                     <i class="fa-solid fa-eye toggle-password-2"></i>
                 </div>
+                <small class="error-msg"></small>
             </div>
             <div id="signupError" class="general-error"></div>
             <button type="submit" class="btn-primary">إنشاء الحساب</button>
