@@ -196,8 +196,59 @@
         <div class="info-grid">
           <div class="info-item"><p>مرحباً بك في لوحة الإدارة. يمكنك الوصول لخصائص الإدارة من القائمة العلوية.</p></div>
         </div>
+
+        <div class="customers-block">
+          <div class="section-header">
+            <h3><i class="fas fa-users"></i> الزبائن</h3>
+            <input
+              type="text"
+              id="customerSearch"
+              class="customer-search-input"
+              placeholder="ابحث بالاسم، البريد، أو الهاتف..."
+              autocomplete="off"
+            >
+          </div>
+
+          <div class="table-wrap">
+            <table class="data-table" id="customersTable">
+              <thead>
+                <tr>
+                  <th>الاسم</th>
+                  <th>البريد الإلكتروني</th>
+                  <th>الهاتف</th>
+                  <th>عدد الطلبات</th>
+                  <th>الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody id="customersTableBody"></tbody>
+            </table>
+            <p id="customersLoading" class="customers-empty">جاري تحميل الزبائن...</p>
+            <p id="customersEmpty" class="customers-empty" style="display:none;">لا يوجد زبائن مطابقون للبحث</p>
+          </div>
+        </div>
       </section>
     </main>
+
+    <!-- Delete customer confirmation modal -->
+    <div class="modal-overlay" id="deleteCustomerModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <span>تأكيد حذف الزبون</span>
+          <button class="close-modal" id="closeDeleteModal" type="button">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p>هل أنت متأكد من حذف حساب <strong id="deleteCustomerName"></strong>؟ لا يمكن التراجع عن هذا الإجراء.</p>
+        </div>
+        <div class="modal-footer">
+          <div class="modal-actions">
+            <button class="btn-secondary" id="cancelDeleteBtn" type="button">إلغاء</button>
+            <button class="btn-danger" id="confirmDeleteBtn" type="button">
+              <i class="fas fa-trash"></i> حذف نهائي
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <footer class="main-footer">
         <div class="footer-container">

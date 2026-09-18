@@ -82,7 +82,8 @@ body {
 
 .btn-primary,
 .btn-secondary,
-.btn-cart {
+.btn-cart,
+.btn-danger {
     padding: 10px 20px;
     border: none;
     border-radius: 8px;
@@ -113,6 +114,24 @@ body {
 
 .btn-cart:hover {
     background: var(--dark-blue-hover);
+}
+
+.btn-danger {
+    background: #fdecea;
+    color: #e74c3c;
+    font-weight: bold;
+    padding: 6px 14px;
+    font-size: 0.85rem;
+}
+
+.btn-danger:hover {
+    background: #e74c3c;
+    color: #fff;
+}
+
+.btn-danger:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 
@@ -214,6 +233,44 @@ body {
     font-size: 0.75rem;
     margin-top: 5px;
     display: none;
+}
+
+/* ===== Admin: customers table ===== */
+.customers-block {
+    margin-top: 30px;
+}
+
+.customer-search-input {
+    padding: 8px 14px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.85rem;
+    width: 260px;
+    max-width: 100%;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.customer-search-input:focus {
+    border-color: var(--accent-gold);
+}
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+.customers-empty {
+    text-align: center;
+    color: #888;
+    padding: 20px 0;
+    font-size: 0.9rem;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
 }
 
 
@@ -361,7 +418,8 @@ body {
         gap: 10px;
     }
 
-    .section-header button {
+    .section-header button,
+    .section-header input {
         width: 100%;
     }
 }
