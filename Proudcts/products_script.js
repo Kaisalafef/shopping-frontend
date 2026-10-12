@@ -218,7 +218,7 @@ function createProductCard(product, isAdmin) {
       <a href="/Product/Product.html?id=${product.id}" class="card-link-wrapper">
         <div class="product-img-wrapper">
           ${discountBadge}
-          <img src="${product.img}" alt="${product.name}" onerror="this.src='/images/looogo.png'">
+          <img src="${product.img}" alt="${product.name}" loading="lazy" decoding="async" onerror="this.src='/images/looogo.png'">
         </div>
 
         <div class="product-info">

@@ -345,6 +345,20 @@ const getAuthHeaders = () => ({
       showToast("أضف لونًا واحدًا على الأقل مع صورة", "warning"); return;
     }
 
+    // ضغط الصور داخل المتصفح قبل الرفع (يسرّع الرفع ويتجاوز حد حجم الملف)
+    const saveBtnHtml = els.saveBtn.innerHTML;
+    let saved = false;
+    els.saveBtn.disabled = true;
+    els.saveBtn.textContent = "جاري تجهيز الصور...";
+
+    const files = await Promise.all(
+      state.colors.map((c) =>
+        c.file && window.compressImage
+          ? window.compressImage(c.file, { maxSide: 1280, quality: 0.82 })
+          : c.file
+      )
+    );
+
     const fd = new FormData();
     fd.append("name", els.title.value);
     fd.append("description", els.description.value);
@@ -356,7 +370,7 @@ const getAuthHeaders = () => ({
     state.sizes.forEach((s, i) => { if (s.value) fd.append(`sizes[${i}][size]`, s.value); });
     state.colors.forEach((c, i) => {
       fd.append(`images[${i}][color]`, c.value);
-      fd.append(`images[${i}][file]`, c.file);
+      fd.append(`images[${i}][file]`, files[i]);
     });
 
     let url = `${API_BASE}/products`;
@@ -376,6 +390,7 @@ const getAuthHeaders = () => ({
       });
       if (res.ok) {
         showToast("تمت إضافة المنتج بنجاح!", "success");
+        saved = true;
         setTimeout(() => location.reload(), 1500);
       } else {
         const err = await res.json();
@@ -386,6 +401,11 @@ const getAuthHeaders = () => ({
       }
     } catch (e) {
       showToast("فشل الاتصال بالسيرفر!", "error");
+    } finally {
+      if (!saved) {
+        els.saveBtn.disabled = false;
+        els.saveBtn.innerHTML = saveBtnHtml;
+      }
     }
   };
 

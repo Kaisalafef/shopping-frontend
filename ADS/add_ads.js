@@ -95,10 +95,25 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const submitBtnHtml = submitBtn ? submitBtn.innerHTML : "";
+    let published = false;
+
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = "جاري تجهيز الصورة...";
+    }
+
+    // ضغط الصورة داخل المتصفح قبل الرفع (يبقى العرض عالي الدقة للبانر)
+    let imageFile = imageInput.files[0];
+    if (window.compressImage) {
+      imageFile = await window.compressImage(imageFile, { maxSide: 1600, quality: 0.82 });
+    }
+
     const formData = new FormData();
     formData.append("title", titleInput.value);
     formData.append("description", descInput.value); // إضافة الوصف
-    formData.append("image", imageInput.files[0]);
+    formData.append("image", imageFile);
     try {
       const response = await fetch("https://api.tasswek.com/api/ads", {
         method: "POST",
@@ -113,6 +128,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (response.ok) {
         showToast("تم نشر الإعلان بنجاح", "success");
+        published = true;
         window.location.href = "Add_ADS.html";
       } else {
         showToast(result.message || "حدث خطأ أثناء الحفظ", "error");
@@ -120,6 +136,11 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (error) {
       console.error(error);
       showToast("خطأ في الاتصال بالخادم", "error");
+    } finally {
+      if (!published && submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = submitBtnHtml;
+      }
     }
   });
 });

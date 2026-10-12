@@ -239,7 +239,7 @@ proofForm.addEventListener("submit", async function (e) {
 
     const senderName = senderNameInput.value.trim();
     const transactionId = transactionIdInput.value.trim();
-    const proofImage = document.getElementById("proofImage").files[0];
+    let proofImage = document.getElementById("proofImage").files[0];
 
     if (!senderName || !transactionId) {
         showToast("يرجى ملء جميع الحقول المطلوبة", "warning");
@@ -252,6 +252,11 @@ proofForm.addEventListener("submit", async function (e) {
     document.querySelector(".btn-loader").classList.remove("hidden");
 
     try {
+        // ضغط صورة الإيصال داخل المتصفح قبل الرفع (يبقى النص مقروءاً)
+        if (proofImage && window.compressImage) {
+            proofImage = await window.compressImage(proofImage, { maxSide: 1600, quality: 0.85 });
+        }
+
         const formData = new FormData();
         formData.append("sender_name", senderName);
         formData.append("transaction_id", transactionId);
