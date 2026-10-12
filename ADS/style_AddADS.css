@@ -15,7 +15,10 @@
     --danger: #d63031;
     --blue-btn: #007185;
 }
+.body{
+        display: block;
 
+}
 
         .form-container {
             background: white;
